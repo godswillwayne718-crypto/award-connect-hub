@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as ProfileSetupRouteImport } from './routes/profile-setup'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CreateAccountRouteImport } from './routes/create-account'
 import { Route as CommunityRouteImport } from './routes/community'
@@ -26,6 +27,11 @@ const StatusRoute = StatusRouteImport.update({
 const ProfileSetupRoute = ProfileSetupRouteImport.update({
   id: '/profile-setup',
   path: '/profile-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRoute = HomeRouteImport.update({
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRoute
   '/create-account': typeof CreateAccountRoute
   '/home': typeof HomeRoute
+  '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/status': typeof StatusRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/community': typeof CommunityRoute
   '/create-account': typeof CreateAccountRoute
   '/home': typeof HomeRoute
+  '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/status': typeof StatusRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/community': typeof CommunityRoute
   '/create-account': typeof CreateAccountRoute
   '/home': typeof HomeRoute
+  '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/status': typeof StatusRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/create-account'
     | '/home'
+    | '/profile'
     | '/profile-setup'
     | '/status'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/create-account'
     | '/home'
+    | '/profile'
     | '/profile-setup'
     | '/status'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/create-account'
     | '/home'
+    | '/profile'
     | '/profile-setup'
     | '/status'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRoute
   CreateAccountRoute: typeof CreateAccountRoute
   HomeRoute: typeof HomeRoute
+  ProfileRoute: typeof ProfileRoute
   ProfileSetupRoute: typeof ProfileSetupRoute
   StatusRoute: typeof StatusRoute
 }
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/profile-setup'
       fullPath: '/profile-setup'
       preLoaderRoute: typeof ProfileSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRoute,
   CreateAccountRoute: CreateAccountRoute,
   HomeRoute: HomeRoute,
+  ProfileRoute: ProfileRoute,
   ProfileSetupRoute: ProfileSetupRoute,
   StatusRoute: StatusRoute,
 }
