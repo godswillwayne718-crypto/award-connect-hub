@@ -60,15 +60,15 @@ function ProfileScreen() {
 
       <div className="space-y-4 px-5 pt-5">
         <div className="animate-fade-up grid grid-cols-3 gap-2">
-          <Button asChild variant="default" size="pill" className="text-xs">
+          <Button asChild variant="default" size="pillAuto" className="w-full px-2 text-xs">
             <Link to="/profile-setup">
               <Pencil className="size-4" /> Edit
             </Link>
           </Button>
-          <Button variant="soft" size="pill" className="text-xs" onClick={shareProfile}>
+          <Button variant="soft" size="pillAuto" className="w-full px-2 text-xs" onClick={shareProfile}>
             <Share2 className="size-4" /> Share
           </Button>
-          <Button asChild variant="soft" size="pill" className="text-xs">
+          <Button asChild variant="soft" size="pillAuto" className="w-full px-2 text-xs">
             <Link to="/settings">
               <Settings className="size-4" /> Settings
             </Link>
