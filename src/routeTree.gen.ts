@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProfileSetupRouteImport } from './routes/profile-setup'
+import { Route as CreateAccountRouteImport } from './routes/create-account'
+import { Route as AccountSetupRouteImport } from './routes/account-setup'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ProfileSetupRoute = ProfileSetupRouteImport.update({
+  id: '/profile-setup',
+  path: '/profile-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateAccountRoute = CreateAccountRouteImport.update({
+  id: '/create-account',
+  path: '/create-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountSetupRoute = AccountSetupRouteImport.update({
+  id: '/account-setup',
+  path: '/account-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account-setup': typeof AccountSetupRoute
+  '/create-account': typeof CreateAccountRoute
+  '/profile-setup': typeof ProfileSetupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account-setup': typeof AccountSetupRoute
+  '/create-account': typeof CreateAccountRoute
+  '/profile-setup': typeof ProfileSetupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account-setup': typeof AccountSetupRoute
+  '/create-account': typeof CreateAccountRoute
+  '/profile-setup': typeof ProfileSetupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/account-setup' | '/create-account' | '/profile-setup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/account-setup' | '/create-account' | '/profile-setup'
+  id: '__root__' | '/' | '/account-setup' | '/create-account' | '/profile-setup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountSetupRoute: typeof AccountSetupRoute
+  CreateAccountRoute: typeof CreateAccountRoute
+  ProfileSetupRoute: typeof ProfileSetupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/profile-setup': {
+      id: '/profile-setup'
+      path: '/profile-setup'
+      fullPath: '/profile-setup'
+      preLoaderRoute: typeof ProfileSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-account': {
+      id: '/create-account'
+      path: '/create-account'
+      fullPath: '/create-account'
+      preLoaderRoute: typeof CreateAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account-setup': {
+      id: '/account-setup'
+      path: '/account-setup'
+      fullPath: '/account-setup'
+      preLoaderRoute: typeof AccountSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountSetupRoute: AccountSetupRoute,
+  CreateAccountRoute: CreateAccountRoute,
+  ProfileSetupRoute: ProfileSetupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
