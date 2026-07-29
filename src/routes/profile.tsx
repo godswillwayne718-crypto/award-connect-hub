@@ -1,14 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, Pencil, ShieldCheck } from "lucide-react";
+import { Award, ChevronRight, Pencil, Settings, Share2, Users } from "lucide-react";
+import { toast } from "sonner";
 import { AppScreen } from "@/components/tian/app-screen";
+import { ProfileCard, Tag } from "@/components/tian/profile-card";
+import { ProfileHeader } from "@/components/tian/profile-header";
 import { Button } from "@/components/ui/button";
+import {
+  ACHIEVEMENTS,
+  COMMUNITIES,
+  DEFAULT_INTERESTS,
+  usernameOf,
+} from "@/lib/tian-profile-data";
 import { useProfile } from "@/lib/tian-store";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
       { title: "Profile — TIAN" },
-      { name: "description", content: "Your TIAN profile, Award level and community interests." },
+      {
+        name: "description",
+        content:
+          "Your TIAN profile: Award role and level, bio, interests, achievements and communities.",
+      },
       { property: "og:title", content: "Profile — TIAN" },
       { property: "og:description", content: "Your Award story on TIAN." },
     ],
@@ -16,73 +29,135 @@ export const Route = createFileRoute("/profile")({
   component: ProfileScreen,
 });
 
+const LEVEL_TONE: Record<string, string> = {
+  gold: "bg-gold-soft text-gold-foreground",
+  silver: "bg-muted text-foreground",
+  bronze: "bg-accent-soft text-accent-foreground",
+};
+
 function ProfileScreen() {
   const profile = useProfile();
-  const name = profile.fullName || "Your name";
-  const initials =
-    profile.fullName
-      .split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((n) => n[0]?.toUpperCase())
-      .join("") || "T";
+  const interests = profile.interests.length ? profile.interests : DEFAULT_INTERESTS;
+
+  async function shareProfile() {
+    const url = `${typeof window !== "undefined" ? window.location.origin : ""}/profile`;
+    const text = `${profile.fullName || "A TIAN member"} (@${usernameOf(profile)}) on TIAN`;
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({ title: "TIAN profile", text, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      toast.success("Profile link copied");
+    } catch {
+      /* share dismissed */
+    }
+  }
 
   return (
     <AppScreen>
-      <header className="rounded-b-3xl bg-navy-gradient px-5 pb-7 pt-10 text-center shadow-lift">
-        <span className="mx-auto grid size-20 place-items-center rounded-full bg-primary-foreground/10 font-display text-xl font-extrabold text-primary-foreground ring-2 ring-gold/40">
-          {initials}
-        </span>
-        <h1 className="mt-3 font-display text-xl font-extrabold text-primary-foreground">{name}</h1>
-        <p className="mt-1 text-xs text-primary-foreground/65">
-          {profile.headline || "Add a headline to introduce yourself"}
-        </p>
-        <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-          {profile.level ? (
-            <span className="rounded-full bg-gold/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-gold">
-              {profile.level} Award
-            </span>
-          ) : null}
-          <span className="flex items-center gap-1 rounded-full bg-primary-foreground/10 px-3 py-1 text-[11px] font-semibold text-primary-foreground/80">
-            <MapPin className="size-3" />
-            {profile.country || "Add country"}
-          </span>
-          <span className="flex items-center gap-1 rounded-full bg-accent/20 px-3 py-1 text-[11px] font-semibold text-primary-foreground">
-            <ShieldCheck className="size-3" />
-            Pending verification
-          </span>
+      <ProfileHeader profile={profile} />
+
+      <div className="space-y-4 px-5 pt-5">
+        <div className="animate-fade-up grid grid-cols-3 gap-2">
+          <Button asChild variant="default" size="pillAuto" className="w-full px-2 text-xs">
+            <Link to="/profile-setup">
+              <Pencil className="size-4" /> Edit
+            </Link>
+          </Button>
+          <Button variant="soft" size="pillAuto" className="w-full px-2 text-xs" onClick={shareProfile}>
+            <Share2 className="size-4" /> Share
+          </Button>
+          <Button asChild variant="soft" size="pillAuto" className="w-full px-2 text-xs">
+            <Link to="/settings">
+              <Settings className="size-4" /> Settings
+            </Link>
+          </Button>
         </div>
-      </header>
 
-      <div className="space-y-4 px-5 pt-6">
-        <section className="rounded-3xl border border-border bg-card p-4 shadow-soft">
-          <h2 className="text-sm font-extrabold text-foreground">About</h2>
-          <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted-foreground">
-            {profile.bio || "Tell the network about your Award journey."}
+        <ProfileCard title="About" style={{ animationDelay: "60ms" }}>
+          <p className="text-[13.5px] leading-relaxed text-muted-foreground">
+            {profile.bio ||
+              "Award participant passionate about hiking, design and community service — building skills, leading teams and giving back through the International Award."}
           </p>
-        </section>
+        </ProfileCard>
 
-        {profile.interests.length ? (
-          <section className="rounded-3xl border border-border bg-card p-4 shadow-soft">
-            <h2 className="text-sm font-extrabold text-foreground">Interests</h2>
-            <div className="mt-2.5 flex flex-wrap gap-2">
-              {profile.interests.map((i) => (
+        <ProfileCard title="Interests" style={{ animationDelay: "100ms" }}>
+          <div className="flex flex-wrap gap-2">
+            {interests.map((interest) => (
+              <Tag key={interest}>{interest}</Tag>
+            ))}
+          </div>
+        </ProfileCard>
+
+        <ProfileCard
+          title="Achievements"
+          style={{ animationDelay: "140ms" }}
+          action={
+            <span className="text-[11px] font-bold uppercase tracking-wide text-primary">
+              {ACHIEVEMENTS.length} records
+            </span>
+          }
+        >
+          <ul className="space-y-2.5">
+            {ACHIEVEMENTS.map((a) => (
+              <li
+                key={a.id}
+                className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3 transition-transform duration-200 active:scale-[0.99]"
+              >
                 <span
-                  key={i}
-                  className="rounded-full bg-primary-soft px-3 py-1.5 text-[11px] font-semibold text-primary"
+                  className={`grid size-11 shrink-0 place-items-center rounded-2xl ${LEVEL_TONE[a.level]}`}
                 >
-                  {i}
+                  <Award className="size-5" />
                 </span>
-              ))}
-            </div>
-          </section>
-        ) : null}
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[13px] font-bold text-foreground">{a.title}</p>
+                  <p className="truncate text-[11.5px] text-muted-foreground">{a.issuer}</p>
+                </div>
+                <div className="shrink-0 text-right">
+                  <p className="text-[11px] font-semibold text-muted-foreground">{a.date}</p>
+                  <p
+                    className={`text-[10.5px] font-bold uppercase tracking-wide ${a.verified ? "text-accent" : "text-muted-foreground"}`}
+                  >
+                    {a.verified ? "Verified" : "Pending"}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </ProfileCard>
 
-        <Button asChild variant="soft" size="pill">
-          <Link to="/profile-setup">
-            <Pencil /> Edit profile
-          </Link>
-        </Button>
+        <ProfileCard
+          title="Communities"
+          style={{ animationDelay: "180ms" }}
+          action={
+            <Link to="/community" className="text-[11px] font-bold uppercase tracking-wide text-primary">
+              See all
+            </Link>
+          }
+        >
+          <ul className="space-y-2.5">
+            {COMMUNITIES.map((c) => (
+              <li key={c.id}>
+                <Link
+                  to="/community"
+                  className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3 transition-transform duration-200 active:scale-[0.99]"
+                >
+                  <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary-soft text-primary">
+                    <Users className="size-5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[13px] font-bold text-foreground">{c.name}</p>
+                    <p className="truncate text-[11.5px] text-muted-foreground">
+                      {c.category} · {c.members}
+                    </p>
+                  </div>
+                  <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </ProfileCard>
       </div>
     </AppScreen>
   );

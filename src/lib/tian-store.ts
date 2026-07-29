@@ -12,10 +12,11 @@ export type TianRole =
   | "centre"
   | "university";
 
-export type AwardLevel = "bronze" | "silver" | "gold" | "none";
+export type AwardLevel = "bronze" | "silver" | "gold" | "completed" | "none";
 
 export interface TianProfile {
   fullName: string;
+  username: string;
   email: string;
   country: string;
   role: TianRole | null;
@@ -30,6 +31,7 @@ const STORAGE_KEY = "tian.profile.v1";
 
 const empty: TianProfile = {
   fullName: "",
+  username: "",
   email: "",
   country: "",
   role: null,
@@ -99,6 +101,7 @@ export const LEVELS: { value: AwardLevel; label: string }[] = [
   { value: "bronze", label: "Bronze" },
   { value: "silver", label: "Silver" },
   { value: "gold", label: "Gold" },
+  { value: "completed", label: "Completed" },
   { value: "none", label: "Not applicable" },
 ];
 
