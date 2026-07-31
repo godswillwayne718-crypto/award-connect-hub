@@ -50,27 +50,27 @@ export function ReactionBar({
               onClick={() => setActive(on ? null : key)}
               aria-pressed={on}
               className={cn(
-                "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[12px] font-semibold transition-all duration-200 active:scale-95",
+                "flex flex-1 items-center justify-center gap-1 rounded-xl py-2 text-[10.5px] font-semibold transition-all duration-200 active:scale-95",
                 on ? cn(tone, "bg-muted") : "text-muted-foreground hover:bg-muted",
               )}
             >
-              <Icon className={cn("size-[17px] transition-transform", on && "scale-110")} />
+              <Icon className={cn("size-4 transition-transform", on && "scale-110")} />
               {label}
             </button>
           );
         })}
         <button
           type="button"
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[12px] font-semibold text-muted-foreground transition-all duration-200 hover:bg-muted active:scale-95"
+          className="flex flex-1 items-center justify-center gap-1 rounded-xl py-2 text-[10.5px] font-semibold text-muted-foreground transition-all duration-200 hover:bg-muted active:scale-95"
         >
-          <MessageCircle className="size-[17px]" />
+          <MessageCircle className="size-4" />
           Comment
         </button>
         <button
           type="button"
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[12px] font-semibold text-muted-foreground transition-all duration-200 hover:bg-muted active:scale-95"
+          className="flex flex-1 items-center justify-center gap-1 rounded-xl py-2 text-[10.5px] font-semibold text-muted-foreground transition-all duration-200 hover:bg-muted active:scale-95"
         >
-          <Send className="size-[17px]" />
+          <Send className="size-4" />
           Share
         </button>
       </div>
