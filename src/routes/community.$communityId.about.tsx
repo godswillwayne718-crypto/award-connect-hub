@@ -1,19 +1,16 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import { ProfileCard } from "@/components/tian/profile-card";
 import { getCommunity, initials } from "@/lib/community-data";
 
 export const Route = createFileRoute("/community/$communityId/about")({
-  loader: ({ params }) => {
-    const community = getCommunity(params.communityId);
-    if (!community) throw notFound();
-    return { community };
-  },
   component: CommunityAbout,
 });
 
 function CommunityAbout() {
-  const { community } = Route.useLoaderData();
+  const { communityId } = Route.useParams();
+  const community = getCommunity(communityId);
+  if (!community) return null;
 
   return (
     <div className="space-y-4">
