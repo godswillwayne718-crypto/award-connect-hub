@@ -20,6 +20,7 @@ import { Route as ChatsRouteImport } from './routes/chats'
 import { Route as AccountSetupRouteImport } from './routes/account-setup'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
+import { Route as CommunityCreatePostRouteImport } from './routes/community.create-post'
 import { Route as CommunityCommunityIdRouteImport } from './routes/community.$communityId'
 import { Route as CommunityCommunityIdIndexRouteImport } from './routes/community.$communityId.index'
 import { Route as CommunityCommunityIdMembersRouteImport } from './routes/community.$communityId.members'
@@ -80,6 +81,11 @@ const CommunityIndexRoute = CommunityIndexRouteImport.update({
   path: '/',
   getParentRoute: () => CommunityRoute,
 } as any)
+const CommunityCreatePostRoute = CommunityCreatePostRouteImport.update({
+  id: '/create-post',
+  path: '/create-post',
+  getParentRoute: () => CommunityRoute,
+} as any)
 const CommunityCommunityIdRoute = CommunityCommunityIdRouteImport.update({
   id: '/$communityId',
   path: '/$communityId',
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
   '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
+  '/community/create-post': typeof CommunityCreatePostRoute
   '/community/': typeof CommunityIndexRoute
   '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
   '/community/$communityId/members': typeof CommunityCommunityIdMembersRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
+  '/community/create-post': typeof CommunityCreatePostRoute
   '/community': typeof CommunityIndexRoute
   '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
   '/community/$communityId/members': typeof CommunityCommunityIdMembersRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
   '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
+  '/community/create-post': typeof CommunityCreatePostRoute
   '/community/': typeof CommunityIndexRoute
   '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
   '/community/$communityId/members': typeof CommunityCommunityIdMembersRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/status'
     | '/community/$communityId'
+    | '/community/create-post'
     | '/community/'
     | '/community/$communityId/about'
     | '/community/$communityId/members'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/profile-setup'
     | '/settings'
     | '/status'
+    | '/community/create-post'
     | '/community'
     | '/community/$communityId/about'
     | '/community/$communityId/members'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/status'
     | '/community/$communityId'
+    | '/community/create-post'
     | '/community/'
     | '/community/$communityId/about'
     | '/community/$communityId/members'
@@ -298,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityIndexRouteImport
       parentRoute: typeof CommunityRoute
     }
+    '/community/create-post': {
+      id: '/community/create-post'
+      path: '/create-post'
+      fullPath: '/community/create-post'
+      preLoaderRoute: typeof CommunityCreatePostRouteImport
+      parentRoute: typeof CommunityRoute
+    }
     '/community/$communityId': {
       id: '/community/$communityId'
       path: '/$communityId'
@@ -346,11 +365,13 @@ const CommunityCommunityIdRouteWithChildren =
 
 interface CommunityRouteChildren {
   CommunityCommunityIdRoute: typeof CommunityCommunityIdRouteWithChildren
+  CommunityCreatePostRoute: typeof CommunityCreatePostRoute
   CommunityIndexRoute: typeof CommunityIndexRoute
 }
 
 const CommunityRouteChildren: CommunityRouteChildren = {
   CommunityCommunityIdRoute: CommunityCommunityIdRouteWithChildren,
+  CommunityCreatePostRoute: CommunityCreatePostRoute,
   CommunityIndexRoute: CommunityIndexRoute,
 }
 
