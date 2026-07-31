@@ -21,6 +21,9 @@ import { Route as AccountSetupRouteImport } from './routes/account-setup'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
 import { Route as CommunityCommunityIdRouteImport } from './routes/community.$communityId'
+import { Route as CommunityCommunityIdIndexRouteImport } from './routes/community.$communityId.index'
+import { Route as CommunityCommunityIdMembersRouteImport } from './routes/community.$communityId.members'
+import { Route as CommunityCommunityIdAboutRouteImport } from './routes/community.$communityId.about'
 
 const StatusRoute = StatusRouteImport.update({
   id: '/status',
@@ -82,6 +85,24 @@ const CommunityCommunityIdRoute = CommunityCommunityIdRouteImport.update({
   path: '/$communityId',
   getParentRoute: () => CommunityRoute,
 } as any)
+const CommunityCommunityIdIndexRoute =
+  CommunityCommunityIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => CommunityCommunityIdRoute,
+  } as any)
+const CommunityCommunityIdMembersRoute =
+  CommunityCommunityIdMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => CommunityCommunityIdRoute,
+  } as any)
+const CommunityCommunityIdAboutRoute =
+  CommunityCommunityIdAboutRouteImport.update({
+    id: '/about',
+    path: '/about',
+    getParentRoute: () => CommunityCommunityIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -94,8 +115,11 @@ export interface FileRoutesByFullPath {
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
-  '/community/$communityId': typeof CommunityCommunityIdRoute
+  '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
   '/community/': typeof CommunityIndexRoute
+  '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
+  '/community/$communityId/members': typeof CommunityCommunityIdMembersRoute
+  '/community/$communityId/': typeof CommunityCommunityIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -107,8 +131,10 @@ export interface FileRoutesByTo {
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
-  '/community/$communityId': typeof CommunityCommunityIdRoute
   '/community': typeof CommunityIndexRoute
+  '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
+  '/community/$communityId/members': typeof CommunityCommunityIdMembersRoute
+  '/community/$communityId': typeof CommunityCommunityIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -122,8 +148,11 @@ export interface FileRoutesById {
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
-  '/community/$communityId': typeof CommunityCommunityIdRoute
+  '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
   '/community/': typeof CommunityIndexRoute
+  '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
+  '/community/$communityId/members': typeof CommunityCommunityIdMembersRoute
+  '/community/$communityId/': typeof CommunityCommunityIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -140,6 +169,9 @@ export interface FileRouteTypes {
     | '/status'
     | '/community/$communityId'
     | '/community/'
+    | '/community/$communityId/about'
+    | '/community/$communityId/members'
+    | '/community/$communityId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -151,8 +183,10 @@ export interface FileRouteTypes {
     | '/profile-setup'
     | '/settings'
     | '/status'
-    | '/community/$communityId'
     | '/community'
+    | '/community/$communityId/about'
+    | '/community/$communityId/members'
+    | '/community/$communityId'
   id:
     | '__root__'
     | '/'
@@ -167,6 +201,9 @@ export interface FileRouteTypes {
     | '/status'
     | '/community/$communityId'
     | '/community/'
+    | '/community/$communityId/about'
+    | '/community/$communityId/members'
+    | '/community/$communityId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -268,16 +305,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityCommunityIdRouteImport
       parentRoute: typeof CommunityRoute
     }
+    '/community/$communityId/': {
+      id: '/community/$communityId/'
+      path: '/'
+      fullPath: '/community/$communityId/'
+      preLoaderRoute: typeof CommunityCommunityIdIndexRouteImport
+      parentRoute: typeof CommunityCommunityIdRoute
+    }
+    '/community/$communityId/members': {
+      id: '/community/$communityId/members'
+      path: '/members'
+      fullPath: '/community/$communityId/members'
+      preLoaderRoute: typeof CommunityCommunityIdMembersRouteImport
+      parentRoute: typeof CommunityCommunityIdRoute
+    }
+    '/community/$communityId/about': {
+      id: '/community/$communityId/about'
+      path: '/about'
+      fullPath: '/community/$communityId/about'
+      preLoaderRoute: typeof CommunityCommunityIdAboutRouteImport
+      parentRoute: typeof CommunityCommunityIdRoute
+    }
   }
 }
 
+interface CommunityCommunityIdRouteChildren {
+  CommunityCommunityIdAboutRoute: typeof CommunityCommunityIdAboutRoute
+  CommunityCommunityIdMembersRoute: typeof CommunityCommunityIdMembersRoute
+  CommunityCommunityIdIndexRoute: typeof CommunityCommunityIdIndexRoute
+}
+
+const CommunityCommunityIdRouteChildren: CommunityCommunityIdRouteChildren = {
+  CommunityCommunityIdAboutRoute: CommunityCommunityIdAboutRoute,
+  CommunityCommunityIdMembersRoute: CommunityCommunityIdMembersRoute,
+  CommunityCommunityIdIndexRoute: CommunityCommunityIdIndexRoute,
+}
+
+const CommunityCommunityIdRouteWithChildren =
+  CommunityCommunityIdRoute._addFileChildren(CommunityCommunityIdRouteChildren)
+
 interface CommunityRouteChildren {
-  CommunityCommunityIdRoute: typeof CommunityCommunityIdRoute
+  CommunityCommunityIdRoute: typeof CommunityCommunityIdRouteWithChildren
   CommunityIndexRoute: typeof CommunityIndexRoute
 }
 
 const CommunityRouteChildren: CommunityRouteChildren = {
-  CommunityCommunityIdRoute: CommunityCommunityIdRoute,
+  CommunityCommunityIdRoute: CommunityCommunityIdRouteWithChildren,
   CommunityIndexRoute: CommunityIndexRoute,
 }
 
