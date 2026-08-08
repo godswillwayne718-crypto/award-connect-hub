@@ -1,5 +1,6 @@
 import { MapPin } from "lucide-react";
-import { initials, type CommunityMember } from "@/lib/community-data";
+import { Avatar } from "@/components/community/avatar";
+import type { CommunityMember } from "@/lib/community-data";
 
 export function MemberCard({
   member,
@@ -9,13 +10,11 @@ export function MemberCard({
   style?: React.CSSProperties;
 }) {
   return (
-    <div
+    <li
       style={style}
       className="animate-fade-up flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-soft transition-transform duration-200 hover:-translate-y-0.5"
     >
-      <span className="grid size-12 shrink-0 place-items-center rounded-full bg-navy-deep font-display text-sm font-extrabold text-primary-foreground">
-        {initials(member.name)}
-      </span>
+      <Avatar name={member.name} size="lg" tone="navy" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-[14px] font-bold text-foreground">{member.name}</p>
         <p className="truncate text-[12px] text-muted-foreground">@{member.username}</p>
@@ -28,12 +27,12 @@ export function MemberCard({
               {member.level}
             </span>
           ) : null}
-          <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
-            <MapPin className="size-3" />
-            {member.country}
+          <span className="flex min-w-0 items-center gap-1 text-[11px] font-medium text-muted-foreground">
+            <MapPin className="size-3 shrink-0" aria-hidden="true" />
+            <span className="truncate">{member.country}</span>
           </span>
         </div>
       </div>
-    </div>
+    </li>
   );
 }
