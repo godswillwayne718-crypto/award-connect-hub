@@ -1,9 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
+import { Avatar } from "@/components/community/avatar";
 import { ProfileCard } from "@/components/tian/profile-card";
-import { getCommunity, initials } from "@/lib/community-data";
+import { getCommunity } from "@/lib/community-data";
 
 export const Route = createFileRoute("/community/$communityId/about")({
+  head: () => ({
+    meta: [
+      { title: "About this community — TIAN" },
+      {
+        name: "description",
+        content: "Community rules and the moderators who keep this Award community safe.",
+      },
+      { property: "og:title", content: "About this community — TIAN" },
+      { property: "og:description", content: "Rules and moderators for this Award community." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: CommunityAbout,
 });
 
@@ -31,26 +45,24 @@ function CommunityAbout() {
         title="Moderators"
         action={
           <span className="flex items-center gap-1 text-[11.5px] font-semibold text-accent">
-            <ShieldCheck className="size-3.5" />
+            <ShieldCheck className="size-3.5" aria-hidden="true" />
             Verified
           </span>
         }
       >
-        <div className="space-y-3">
+        <ul className="space-y-3">
           {community.moderators.map((m) => (
-            <div key={m.id} className="flex items-center gap-3">
-              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-navy-deep text-[12px] font-extrabold text-primary-foreground">
-                {initials(m.name)}
-              </span>
+            <li key={m.id} className="flex items-center gap-3">
+              <Avatar name={m.name} size="sm" tone="navy" />
               <div className="min-w-0">
                 <p className="truncate text-[13.5px] font-bold text-foreground">{m.name}</p>
                 <p className="truncate text-[12px] text-muted-foreground">
                   {m.role} · {m.country}
                 </p>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </ProfileCard>
     </div>
   );

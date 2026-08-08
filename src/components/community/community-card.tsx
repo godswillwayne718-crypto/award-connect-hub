@@ -1,31 +1,54 @@
 import { Link } from "@tanstack/react-router";
 import { Check, Plus, Users } from "lucide-react";
 import { formatMembers, type Community } from "@/lib/community-data";
-import { toggleJoin, useJoined } from "@/lib/community-store";
+import { toggleJoin, useIsJoined } from "@/lib/community-store";
 import { cn } from "@/lib/utils";
 
-function JoinButton({ id, className }: { id: string; className?: string }) {
-  const joined = useJoined().includes(id);
+const cardBase =
+  "animate-fade-up block rounded-3xl border border-border bg-card shadow-soft transition-all duration-200 hover:shadow-lift active:scale-[0.99] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20";
+
+export function JoinButton({
+  community,
+  className,
+}: {
+  community: Community;
+  className?: string;
+}) {
+  const joined = useIsJoined(community.id);
   return (
     <button
       type="button"
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        toggleJoin(id);
+        toggleJoin(community.id);
       }}
       aria-pressed={joined}
+      aria-label={joined ? `Leave ${community.name}` : `Join ${community.name}`}
       className={cn(
-        "inline-flex shrink-0 items-center gap-1 rounded-full px-3.5 py-2 text-[12px] font-bold transition-all duration-200 active:scale-95",
+        "inline-flex h-11 shrink-0 items-center gap-1 rounded-full px-4 text-[12.5px] font-bold transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
         joined
           ? "bg-accent-soft text-accent"
           : "bg-primary text-primary-foreground hover:brightness-110",
         className,
       )}
     >
-      {joined ? <Check className="size-3.5" /> : <Plus className="size-3.5" />}
+      {joined ? (
+        <Check className="size-3.5" aria-hidden="true" />
+      ) : (
+        <Plus className="size-3.5" aria-hidden="true" />
+      )}
       {joined ? "Joined" : "Join"}
     </button>
+  );
+}
+
+function MemberCount({ n }: { n: number }) {
+  return (
+    <span className="flex items-center gap-1 text-[12px] font-medium text-muted-foreground">
+      <Users className="size-3.5" aria-hidden="true" />
+      {formatMembers(n)}
+    </span>
   );
 }
 
@@ -42,9 +65,9 @@ export function CommunityCard({
       to="/community/$communityId"
       params={{ communityId: community.id }}
       style={style}
-      className="animate-fade-up block overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition-all duration-200 hover:shadow-lift active:scale-[0.99]"
+      className={cn(cardBase, "overflow-hidden")}
     >
-      <div className="relative h-28 bg-navy-gradient">
+      <div className="relative aspect-[16/6] bg-navy-gradient">
         <img
           src={community.cover}
           alt=""
@@ -58,20 +81,20 @@ export function CommunityCard({
         </span>
       </div>
       <div className="relative px-4 pb-4">
-        <span className="absolute -top-7 grid size-14 place-items-center rounded-2xl bg-navy-deep font-display text-base font-extrabold text-primary-foreground ring-4 ring-card">
+        <span
+          aria-hidden="true"
+          className="absolute -top-7 grid size-14 place-items-center rounded-2xl bg-navy-deep font-display text-base font-extrabold text-primary-foreground ring-4 ring-card"
+        >
           {community.logoInitials}
         </span>
         <div className="flex items-start justify-between gap-3 pl-[4.25rem] pt-2">
           <div className="min-w-0">
-            <h3 className="truncate font-display text-[15px] font-extrabold tracking-tight text-foreground">
+            <h3 className="line-clamp-2 font-display text-[15px] font-extrabold leading-snug tracking-tight text-foreground">
               {community.name}
             </h3>
-            <p className="flex items-center gap-1 text-[12px] font-medium text-muted-foreground">
-              <Users className="size-3.5" />
-              {formatMembers(community.members)}
-            </p>
+            <MemberCount n={community.members} />
           </div>
-          <JoinButton id={community.id} className="mt-1" />
+          <JoinButton community={community} />
         </div>
         <p className="mt-2.5 line-clamp-2 text-[13px] leading-relaxed text-muted-foreground">
           {community.description}
@@ -94,22 +117,21 @@ export function CommunityRow({
       to="/community/$communityId"
       params={{ communityId: community.id }}
       style={style}
-      className="animate-fade-up flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-soft transition-all duration-200 hover:shadow-lift active:scale-[0.99]"
+      className={cn(cardBase, "flex items-center gap-3 p-3")}
     >
-      <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary-soft font-display text-sm font-extrabold text-primary">
+      <span
+        aria-hidden="true"
+        className="grid size-12 shrink-0 place-items-center rounded-xl bg-primary-soft font-display text-[13px] font-extrabold text-primary"
+      >
         {community.logoInitials}
       </span>
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-[14px] font-bold text-foreground">
-          {community.name}
-        </span>
-        <span className="block truncate text-[12px] text-muted-foreground">
-          {community.category} · {formatMembers(community.members)}
-        </span>
+      <div className="min-w-0 flex-1">
+        <h3 className="truncate text-[14px] font-bold text-foreground">{community.name}</h3>
+        <MemberCount n={community.members} />
+      </div>
+      <span className="shrink-0 rounded-full bg-accent-soft px-3 py-1.5 text-[11px] font-bold text-accent">
+        Joined
       </span>
-      <JoinButton id={community.id} />
     </Link>
   );
 }
-
-export { JoinButton };
