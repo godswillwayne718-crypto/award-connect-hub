@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { MobileShell } from "@/components/tian/mobile-shell";
 import { ProfileCard } from "@/components/tian/profile-card";
+import { setMessagePrivacy, useMessagePrivacy, type MessagePrivacy } from "@/lib/chat-store";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -110,3 +111,54 @@ function SettingsScreen() {
     </MobileShell>
   );
 }
+
+const PRIVACY_OPTIONS: { value: MessagePrivacy; label: string; hint: string }[] = [
+  { value: "everyone", label: "Everyone", hint: "Any TIAN member can message you" },
+  { value: "connections", label: "My connections", hint: "Only people you've connected with" },
+  { value: "verified", label: "Verified Award members", hint: "Only verified accounts" },
+  { value: "nobody", label: "Nobody", hint: "Turn off new message requests" },
+];
+
+/** Chat privacy control — local state today, backend-backed later. */
+function MessagePrivacyCard() {
+  const privacy = useMessagePrivacy();
+  return (
+    <ProfileCard title="Who can message me?">
+      <ul className="space-y-1" role="radiogroup" aria-label="Who can message me?">
+        {PRIVACY_OPTIONS.map((option) => {
+          const active = option.value === privacy;
+          return (
+            <li key={option.value}>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={active}
+                onClick={() => setMessagePrivacy(option.value)}
+                className="flex min-h-11 w-full items-center gap-3 rounded-2xl p-2.5 text-left transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+              >
+                <span
+                  className={
+                    active
+                      ? "grid size-5 shrink-0 place-items-center rounded-full border-2 border-primary"
+                      : "grid size-5 shrink-0 place-items-center rounded-full border-2 border-border"
+                  }
+                >
+                  {active ? <span className="size-2.5 rounded-full bg-primary" /> : null}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[13px] font-bold text-foreground">
+                    {option.label}
+                  </span>
+                  <span className="block truncate text-[11.5px] text-muted-foreground">
+                    {option.hint}
+                  </span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </ProfileCard>
+  );
+}
+
