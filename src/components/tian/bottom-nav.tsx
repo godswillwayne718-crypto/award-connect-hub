@@ -1,20 +1,22 @@
 import { Link } from "@tanstack/react-router";
 import { Home, Users, CircleDashed, MessageCircle, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useUnreadTotal } from "@/lib/chat-store";
 
 const items = [
   { to: "/home", label: "Home", icon: Home },
   { to: "/community", label: "Community", icon: Users },
   { to: "/status", label: "Status", icon: CircleDashed },
-  { to: "/chats", label: "Chats", icon: MessageCircle, badge: 3 },
+  { to: "/chats", label: "Chats", icon: MessageCircle },
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
 
 export function BottomNav() {
+  const unread = useUnreadTotal();
   return (
     <nav className="sticky bottom-0 z-30 mt-auto border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur shadow-nav">
       <ul className="grid grid-cols-5">
-        {items.map(({ to, label, icon: Icon, ...rest }) => (
+        {items.map(({ to, label, icon: Icon }) => (
           <li key={to}>
             <Link
               to={to}
@@ -23,9 +25,9 @@ export function BottomNav() {
             >
               <span className="relative grid size-9 place-items-center rounded-xl transition-all duration-200 group-data-[active=true]:bg-primary-soft">
                 <Icon className="size-[19px]" />
-                {"badge" in rest && rest.badge ? (
+                {to === "/chats" && unread > 0 ? (
                   <span className="absolute -right-0.5 -top-0.5 grid size-4 place-items-center rounded-full bg-accent text-[9px] font-bold text-accent-foreground">
-                    {rest.badge}
+                    {unread}
                   </span>
                 ) : null}
               </span>
