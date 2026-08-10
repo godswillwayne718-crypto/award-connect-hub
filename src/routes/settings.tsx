@@ -96,6 +96,10 @@ function SettingsScreen() {
           </ProfileCard>
         ))}
 
+        <MessagePrivacyCard />
+
+
+
         <button
           type="button"
           className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-card py-3 text-sm font-bold text-destructive shadow-soft"
