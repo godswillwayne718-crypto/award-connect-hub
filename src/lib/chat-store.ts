@@ -193,6 +193,10 @@ export function useIsBlocked(participantId: string): boolean {
   return useStore((s) => s.blocked.includes(participantId), false);
 }
 
+export function useBlockedIds(): string[] {
+  return useStore((s) => s.blocked, EMPTY.blocked);
+}
+
 export function useIsRestricted(participantId: string): boolean {
   return useStore((s) => s.restricted.includes(participantId), false);
 }
