@@ -6,28 +6,19 @@
  * touching a single component. No contact details are ever stored or shown.
  */
 
-export type ChatAwardRole =
-  | "Participant"
-  | "Award Leader"
-  | "Assessor"
-  | "Alumni"
-  | "Award Centre"
-  | "University partner";
+import {
+  PEOPLE,
+  findPerson,
+  searchPeople,
+  type Person,
+  type PersonLevel,
+  type PersonRole,
+} from "@/lib/people-data";
 
-export type ChatAwardLevel = "Bronze" | "Silver" | "Gold" | "Completed" | null;
-
-export interface ChatParticipant {
-  id: string;
-  name: string;
-  username: string;
-  country: string;
-  role: ChatAwardRole;
-  level: ChatAwardLevel;
-  online: boolean;
-  verified: boolean;
-  /** Human readable presence used in the conversation header. */
-  lastSeen: string;
-}
+/** Chat speaks in terms of participants; the directory owns the identity. */
+export type ChatParticipant = Person;
+export type ChatAwardRole = PersonRole;
+export type ChatAwardLevel = PersonLevel;
 
 export type MessageStatus = "sent" | "delivered" | "read";
 
@@ -53,111 +44,10 @@ export interface Chat {
 
 export const ME = "me";
 
-export const PARTICIPANTS: ChatParticipant[] = [
-  {
-    id: "p-alex",
-    name: "Alex Johnson",
-    username: "alex01",
-    country: "United Kingdom",
-    role: "Participant",
-    level: "Gold",
-    online: true,
-    verified: true,
-    lastSeen: "Online now",
-  },
-  {
-    id: "p-maria",
-    name: "Maria Álvarez",
-    username: "maria_award",
-    country: "Spain",
-    role: "Award Leader",
-    level: "Completed",
-    online: true,
-    verified: true,
-    lastSeen: "Online now",
-  },
-  {
-    id: "p-daniel",
-    name: "Daniel Osei",
-    username: "danieltech",
-    country: "Ghana",
-    role: "Alumni",
-    level: "Completed",
-    online: false,
-    verified: false,
-    lastSeen: "Last seen 2 h ago",
-  },
-  {
-    id: "p-sarah",
-    name: "Sarah Whitfield",
-    username: "sarahleadership",
-    country: "Australia",
-    role: "Assessor",
-    level: null,
-    online: false,
-    verified: true,
-    lastSeen: "Last seen yesterday",
-  },
-  {
-    id: "p-liam",
-    name: "Liam O'Connor",
-    username: "liam_expedition",
-    country: "Ireland",
-    role: "Participant",
-    level: "Silver",
-    online: true,
-    verified: false,
-    lastSeen: "Online now",
-  },
-  {
-    id: "p-noor",
-    name: "Noor Haddad",
-    username: "noor_centre",
-    country: "Jordan",
-    role: "Award Centre",
-    level: null,
-    online: false,
-    verified: true,
-    lastSeen: "Last seen 3 d ago",
-  },
-  {
-    id: "p-ken",
-    name: "Kenji Sato",
-    username: "kenji_scholar",
-    country: "Japan",
-    role: "University partner",
-    level: null,
-    online: false,
-    verified: true,
-    lastSeen: "Last seen this week",
-  },
-  {
-    id: "p-amara",
-    name: "Amara Nwosu",
-    username: "amara_volunteer",
-    country: "Nigeria",
-    role: "Participant",
-    level: "Bronze",
-    online: true,
-    verified: false,
-    lastSeen: "Online now",
-  },
-];
+export const PARTICIPANTS: ChatParticipant[] = PEOPLE;
 
-export function findParticipant(id: string): ChatParticipant | undefined {
-  return PARTICIPANTS.find((p) => p.id === id);
-}
-
-export function searchParticipants(query: string): ChatParticipant[] {
-  const q = query.trim().toLowerCase().replace(/^@/, "");
-  if (!q) return PARTICIPANTS;
-  return PARTICIPANTS.filter(
-    (p) =>
-      p.username.toLowerCase().includes(q) ||
-      p.name.toLowerCase().includes(q) ||
-      p.country.toLowerCase().includes(q),
-  );
-}
+export const findParticipant = findPerson;
+export const searchParticipants = (query: string) => searchPeople(query);
 
 /** Fixed reference point keeps seeded timestamps stable between renders. */
 const DAY = 86_400_000;

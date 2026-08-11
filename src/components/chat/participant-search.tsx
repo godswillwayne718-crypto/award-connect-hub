@@ -1,9 +1,6 @@
-import { UserRoundSearch } from "lucide-react";
 import type { ChatParticipant } from "@/lib/chat-data";
-import { searchParticipants } from "@/lib/chat-data";
-import { SearchField } from "@/components/community/search-field";
-import { ParticipantCard } from "@/components/chat/participant-card";
-import { ChatEmptyState } from "@/components/chat/chat-empty-state";
+import { ParticipantSearch as SharedParticipantSearch } from "@/components/shared/participant-search";
+import { Button } from "@/components/ui/button";
 
 /** @username directory search used by the New Chat screen. */
 export function ParticipantSearch({
@@ -15,35 +12,22 @@ export function ParticipantSearch({
   onQueryChange: (v: string) => void;
   onStartChat: (participant: ChatParticipant) => void;
 }) {
-  const results = searchParticipants(query);
-
   return (
-    <div className="space-y-4">
-      <SearchField
-        value={query}
-        onChange={onQueryChange}
-        label="Search Award members by username"
-        placeholder="Search @username"
-      />
-
-      {results.length === 0 ? (
-        <ChatEmptyState
-          icon={UserRoundSearch}
-          title="No participants found"
-          copy="Try searching for another @username."
-        />
-      ) : (
-        <ul className="space-y-2.5">
-          {results.map((participant, i) => (
-            <ParticipantCard
-              key={participant.id}
-              participant={participant}
-              onStartChat={onStartChat}
-              index={i}
-            />
-          ))}
-        </ul>
+    <SharedParticipantSearch
+      query={query}
+      onQueryChange={onQueryChange}
+      label="Search Award members by username"
+      placeholder="Search @username"
+      renderActions={(person) => (
+        <Button
+          size="sm"
+          variant="default"
+          className="h-11 rounded-full px-4 text-xs"
+          onClick={() => onStartChat(person)}
+        >
+          Start Chat
+        </Button>
       )}
-    </div>
+    />
   );
 }

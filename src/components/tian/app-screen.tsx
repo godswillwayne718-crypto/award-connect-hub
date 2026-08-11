@@ -3,9 +3,15 @@ import { MobileShell } from "@/components/tian/mobile-shell";
 import { BottomNav } from "@/components/tian/bottom-nav";
 
 /** Standard signed-in screen: scrollable content + persistent bottom navigation. */
-export function AppScreen({ children }: { children: ReactNode }) {
+export function AppScreen({
+  children,
+  width = "app",
+}: {
+  children: ReactNode;
+  width?: "app" | "wide";
+}) {
   return (
-    <MobileShell>
+    <MobileShell width={width}>
       <div className="flex-1 pb-4">{children}</div>
       <BottomNav />
     </MobileShell>

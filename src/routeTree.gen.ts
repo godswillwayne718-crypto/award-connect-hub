@@ -15,12 +15,14 @@ import { Route as ProfileSetupRouteImport } from './routes/profile-setup'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CreateAccountRouteImport } from './routes/create-account'
+import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as ChatsRouteImport } from './routes/chats'
 import { Route as AccountSetupRouteImport } from './routes/account-setup'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
 import { Route as ChatsIndexRouteImport } from './routes/chats.index'
+import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as CommunityCreatePostRouteImport } from './routes/community.create-post'
 import { Route as CommunityCommunityIdRouteImport } from './routes/community.$communityId'
 import { Route as ChatsNewRouteImport } from './routes/chats.new'
@@ -59,6 +61,11 @@ const CreateAccountRoute = CreateAccountRouteImport.update({
   path: '/create-account',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactsRoute = ContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
@@ -88,6 +95,11 @@ const ChatsIndexRoute = ChatsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ChatsRoute,
+} as any)
+const UUsernameRoute = UUsernameRouteImport.update({
+  id: '/u/$username',
+  path: '/u/$username',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CommunityCreatePostRoute = CommunityCreatePostRouteImport.update({
   id: '/create-post',
@@ -133,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/account-setup': typeof AccountSetupRoute
   '/chats': typeof ChatsRouteWithChildren
   '/community': typeof CommunityRouteWithChildren
+  '/contacts': typeof ContactsRoute
   '/create-account': typeof CreateAccountRoute
   '/home': typeof HomeRoute
   '/profile': typeof ProfileRoute
@@ -143,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/chats/new': typeof ChatsNewRoute
   '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
   '/community/create-post': typeof CommunityCreatePostRoute
+  '/u/$username': typeof UUsernameRoute
   '/chats/': typeof ChatsIndexRoute
   '/community/': typeof CommunityIndexRoute
   '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
@@ -152,6 +166,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account-setup': typeof AccountSetupRoute
+  '/contacts': typeof ContactsRoute
   '/create-account': typeof CreateAccountRoute
   '/home': typeof HomeRoute
   '/profile': typeof ProfileRoute
@@ -161,6 +176,7 @@ export interface FileRoutesByTo {
   '/chats/$chatId': typeof ChatsChatIdRoute
   '/chats/new': typeof ChatsNewRoute
   '/community/create-post': typeof CommunityCreatePostRoute
+  '/u/$username': typeof UUsernameRoute
   '/chats': typeof ChatsIndexRoute
   '/community': typeof CommunityIndexRoute
   '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
@@ -173,6 +189,7 @@ export interface FileRoutesById {
   '/account-setup': typeof AccountSetupRoute
   '/chats': typeof ChatsRouteWithChildren
   '/community': typeof CommunityRouteWithChildren
+  '/contacts': typeof ContactsRoute
   '/create-account': typeof CreateAccountRoute
   '/home': typeof HomeRoute
   '/profile': typeof ProfileRoute
@@ -183,6 +200,7 @@ export interface FileRoutesById {
   '/chats/new': typeof ChatsNewRoute
   '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
   '/community/create-post': typeof CommunityCreatePostRoute
+  '/u/$username': typeof UUsernameRoute
   '/chats/': typeof ChatsIndexRoute
   '/community/': typeof CommunityIndexRoute
   '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
@@ -196,6 +214,7 @@ export interface FileRouteTypes {
     | '/account-setup'
     | '/chats'
     | '/community'
+    | '/contacts'
     | '/create-account'
     | '/home'
     | '/profile'
@@ -206,6 +225,7 @@ export interface FileRouteTypes {
     | '/chats/new'
     | '/community/$communityId'
     | '/community/create-post'
+    | '/u/$username'
     | '/chats/'
     | '/community/'
     | '/community/$communityId/about'
@@ -215,6 +235,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account-setup'
+    | '/contacts'
     | '/create-account'
     | '/home'
     | '/profile'
@@ -224,6 +245,7 @@ export interface FileRouteTypes {
     | '/chats/$chatId'
     | '/chats/new'
     | '/community/create-post'
+    | '/u/$username'
     | '/chats'
     | '/community'
     | '/community/$communityId/about'
@@ -235,6 +257,7 @@ export interface FileRouteTypes {
     | '/account-setup'
     | '/chats'
     | '/community'
+    | '/contacts'
     | '/create-account'
     | '/home'
     | '/profile'
@@ -245,6 +268,7 @@ export interface FileRouteTypes {
     | '/chats/new'
     | '/community/$communityId'
     | '/community/create-post'
+    | '/u/$username'
     | '/chats/'
     | '/community/'
     | '/community/$communityId/about'
@@ -257,12 +281,14 @@ export interface RootRouteChildren {
   AccountSetupRoute: typeof AccountSetupRoute
   ChatsRoute: typeof ChatsRouteWithChildren
   CommunityRoute: typeof CommunityRouteWithChildren
+  ContactsRoute: typeof ContactsRoute
   CreateAccountRoute: typeof CreateAccountRoute
   HomeRoute: typeof HomeRoute
   ProfileRoute: typeof ProfileRoute
   ProfileSetupRoute: typeof ProfileSetupRoute
   SettingsRoute: typeof SettingsRoute
   StatusRoute: typeof StatusRoute
+  UUsernameRoute: typeof UUsernameRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -309,6 +335,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreateAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contacts': {
+      id: '/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof ContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/community': {
       id: '/community'
       path: '/community'
@@ -350,6 +383,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/chats/'
       preLoaderRoute: typeof ChatsIndexRouteImport
       parentRoute: typeof ChatsRoute
+    }
+    '/u/$username': {
+      id: '/u/$username'
+      path: '/u/$username'
+      fullPath: '/u/$username'
+      preLoaderRoute: typeof UUsernameRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/community/create-post': {
       id: '/community/create-post'
@@ -453,23 +493,15 @@ const rootRouteChildren: RootRouteChildren = {
   AccountSetupRoute: AccountSetupRoute,
   ChatsRoute: ChatsRouteWithChildren,
   CommunityRoute: CommunityRouteWithChildren,
+  ContactsRoute: ContactsRoute,
   CreateAccountRoute: CreateAccountRoute,
   HomeRoute: HomeRoute,
   ProfileRoute: ProfileRoute,
   ProfileSetupRoute: ProfileSetupRoute,
   SettingsRoute: SettingsRoute,
   StatusRoute: StatusRoute,
+  UUsernameRoute: UUsernameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
