@@ -20,6 +20,7 @@ import { Route as CommunityRouteImport } from './routes/community'
 import { Route as ChatsRouteImport } from './routes/chats'
 import { Route as AccountSetupRouteImport } from './routes/account-setup'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StatusIndexRouteImport } from './routes/status.index'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
 import { Route as ChatsIndexRouteImport } from './routes/chats.index'
 import { Route as UUsernameRouteImport } from './routes/u.$username'
@@ -86,6 +87,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StatusIndexRoute = StatusIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StatusRoute,
+} as any)
 const CommunityIndexRoute = CommunityIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -151,7 +157,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
-  '/status': typeof StatusRoute
+  '/status': typeof StatusRouteWithChildren
   '/chats/$chatId': typeof ChatsChatIdRoute
   '/chats/new': typeof ChatsNewRoute
   '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/u/$username': typeof UUsernameRoute
   '/chats/': typeof ChatsIndexRoute
   '/community/': typeof CommunityIndexRoute
+  '/status/': typeof StatusIndexRoute
   '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
   '/community/$communityId/members': typeof CommunityCommunityIdMembersRoute
   '/community/$communityId/': typeof CommunityCommunityIdIndexRoute
@@ -172,13 +179,13 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
-  '/status': typeof StatusRoute
   '/chats/$chatId': typeof ChatsChatIdRoute
   '/chats/new': typeof ChatsNewRoute
   '/community/create-post': typeof CommunityCreatePostRoute
   '/u/$username': typeof UUsernameRoute
   '/chats': typeof ChatsIndexRoute
   '/community': typeof CommunityIndexRoute
+  '/status': typeof StatusIndexRoute
   '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
   '/community/$communityId/members': typeof CommunityCommunityIdMembersRoute
   '/community/$communityId': typeof CommunityCommunityIdIndexRoute
@@ -195,7 +202,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
-  '/status': typeof StatusRoute
+  '/status': typeof StatusRouteWithChildren
   '/chats/$chatId': typeof ChatsChatIdRoute
   '/chats/new': typeof ChatsNewRoute
   '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
@@ -203,6 +210,7 @@ export interface FileRoutesById {
   '/u/$username': typeof UUsernameRoute
   '/chats/': typeof ChatsIndexRoute
   '/community/': typeof CommunityIndexRoute
+  '/status/': typeof StatusIndexRoute
   '/community/$communityId/about': typeof CommunityCommunityIdAboutRoute
   '/community/$communityId/members': typeof CommunityCommunityIdMembersRoute
   '/community/$communityId/': typeof CommunityCommunityIdIndexRoute
@@ -228,6 +236,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/chats/'
     | '/community/'
+    | '/status/'
     | '/community/$communityId/about'
     | '/community/$communityId/members'
     | '/community/$communityId/'
@@ -241,13 +250,13 @@ export interface FileRouteTypes {
     | '/profile'
     | '/profile-setup'
     | '/settings'
-    | '/status'
     | '/chats/$chatId'
     | '/chats/new'
     | '/community/create-post'
     | '/u/$username'
     | '/chats'
     | '/community'
+    | '/status'
     | '/community/$communityId/about'
     | '/community/$communityId/members'
     | '/community/$communityId'
@@ -271,6 +280,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/chats/'
     | '/community/'
+    | '/status/'
     | '/community/$communityId/about'
     | '/community/$communityId/members'
     | '/community/$communityId/'
@@ -287,7 +297,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ProfileSetupRoute: typeof ProfileSetupRoute
   SettingsRoute: typeof SettingsRoute
-  StatusRoute: typeof StatusRoute
+  StatusRoute: typeof StatusRouteWithChildren
   UUsernameRoute: typeof UUsernameRoute
 }
 
@@ -369,6 +379,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/status/': {
+      id: '/status/'
+      path: '/'
+      fullPath: '/status/'
+      preLoaderRoute: typeof StatusIndexRouteImport
+      parentRoute: typeof StatusRoute
     }
     '/community/': {
       id: '/community/'
@@ -488,6 +505,17 @@ const CommunityRouteWithChildren = CommunityRoute._addFileChildren(
   CommunityRouteChildren,
 )
 
+interface StatusRouteChildren {
+  StatusIndexRoute: typeof StatusIndexRoute
+}
+
+const StatusRouteChildren: StatusRouteChildren = {
+  StatusIndexRoute: StatusIndexRoute,
+}
+
+const StatusRouteWithChildren =
+  StatusRoute._addFileChildren(StatusRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountSetupRoute: AccountSetupRoute,
@@ -499,19 +527,9 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ProfileSetupRoute: ProfileSetupRoute,
   SettingsRoute: SettingsRoute,
-  StatusRoute: StatusRoute,
+  StatusRoute: StatusRouteWithChildren,
   UUsernameRoute: UUsernameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
