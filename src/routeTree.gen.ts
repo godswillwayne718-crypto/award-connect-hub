@@ -25,6 +25,7 @@ import { Route as CommunityIndexRouteImport } from './routes/community.index'
 import { Route as ChatsIndexRouteImport } from './routes/chats.index'
 import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as StatusNewRouteImport } from './routes/status.new'
+import { Route as StatusStatusIdRouteImport } from './routes/status.$statusId'
 import { Route as CommunityCreatePostRouteImport } from './routes/community.create-post'
 import { Route as CommunityCommunityIdRouteImport } from './routes/community.$communityId'
 import { Route as ChatsNewRouteImport } from './routes/chats.new'
@@ -113,6 +114,11 @@ const StatusNewRoute = StatusNewRouteImport.update({
   path: '/new',
   getParentRoute: () => StatusRoute,
 } as any)
+const StatusStatusIdRoute = StatusStatusIdRouteImport.update({
+  id: '/$statusId',
+  path: '/$statusId',
+  getParentRoute: () => StatusRoute,
+} as any)
 const CommunityCreatePostRoute = CommunityCreatePostRouteImport.update({
   id: '/create-post',
   path: '/create-post',
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/chats/new': typeof ChatsNewRoute
   '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
   '/community/create-post': typeof CommunityCreatePostRoute
+  '/status/$statusId': typeof StatusStatusIdRoute
   '/status/new': typeof StatusNewRoute
   '/u/$username': typeof UUsernameRoute
   '/chats/': typeof ChatsIndexRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/chats/$chatId': typeof ChatsChatIdRoute
   '/chats/new': typeof ChatsNewRoute
   '/community/create-post': typeof CommunityCreatePostRoute
+  '/status/$statusId': typeof StatusStatusIdRoute
   '/status/new': typeof StatusNewRoute
   '/u/$username': typeof UUsernameRoute
   '/chats': typeof ChatsIndexRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/chats/new': typeof ChatsNewRoute
   '/community/$communityId': typeof CommunityCommunityIdRouteWithChildren
   '/community/create-post': typeof CommunityCreatePostRoute
+  '/status/$statusId': typeof StatusStatusIdRoute
   '/status/new': typeof StatusNewRoute
   '/u/$username': typeof UUsernameRoute
   '/chats/': typeof ChatsIndexRoute
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/chats/new'
     | '/community/$communityId'
     | '/community/create-post'
+    | '/status/$statusId'
     | '/status/new'
     | '/u/$username'
     | '/chats/'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/chats/$chatId'
     | '/chats/new'
     | '/community/create-post'
+    | '/status/$statusId'
     | '/status/new'
     | '/u/$username'
     | '/chats'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/chats/new'
     | '/community/$communityId'
     | '/community/create-post'
+    | '/status/$statusId'
     | '/status/new'
     | '/u/$username'
     | '/chats/'
@@ -427,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatusNewRouteImport
       parentRoute: typeof StatusRoute
     }
+    '/status/$statusId': {
+      id: '/status/$statusId'
+      path: '/$statusId'
+      fullPath: '/status/$statusId'
+      preLoaderRoute: typeof StatusStatusIdRouteImport
+      parentRoute: typeof StatusRoute
+    }
     '/community/create-post': {
       id: '/community/create-post'
       path: '/create-post'
@@ -525,11 +544,13 @@ const CommunityRouteWithChildren = CommunityRoute._addFileChildren(
 )
 
 interface StatusRouteChildren {
+  StatusStatusIdRoute: typeof StatusStatusIdRoute
   StatusNewRoute: typeof StatusNewRoute
   StatusIndexRoute: typeof StatusIndexRoute
 }
 
 const StatusRouteChildren: StatusRouteChildren = {
+  StatusStatusIdRoute: StatusStatusIdRoute,
   StatusNewRoute: StatusNewRoute,
   StatusIndexRoute: StatusIndexRoute,
 }
