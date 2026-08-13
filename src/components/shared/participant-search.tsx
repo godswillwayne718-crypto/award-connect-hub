@@ -4,6 +4,7 @@ import { SearchField } from "@/components/community/search-field";
 import { EmptyState } from "@/components/community/empty-state";
 import { ParticipantCard } from "@/components/shared/participant-card";
 import { searchPeople, type Person } from "@/lib/people-data";
+import { useBlockedIds } from "@/lib/chat-store";
 
 /**
  * Reusable "Find People" experience: search the TIAN directory by name or
@@ -28,7 +29,9 @@ export function ParticipantSearch({
   emptyTitle?: string;
   emptyCopy?: string;
 }) {
-  const results = searchPeople(query, pool);
+  // Blocked participants are never discoverable anywhere in TIAN.
+  const blockedIds = useBlockedIds();
+  const results = searchPeople(query, pool).filter((p) => !blockedIds.includes(p.id));
 
   return (
     <div className="space-y-4">

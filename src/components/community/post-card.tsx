@@ -1,5 +1,8 @@
+import { Link } from "@tanstack/react-router";
 import { MoreHorizontal } from "lucide-react";
 import { Avatar } from "@/components/community/avatar";
+import { UsernameBadge } from "@/components/shared/username-badge";
+import { findPersonByName } from "@/lib/people-data";
 import { ReactionBar } from "@/components/community/reaction-bar";
 import { type CommunityPost } from "@/lib/community-data";
 import { setPollVote, usePollVote } from "@/lib/community-store";
@@ -69,15 +72,43 @@ function Poll({
 }
 
 export function PostCard({ post, style }: { post: CommunityPost; style?: React.CSSProperties }) {
+  // Author links resolve through the shared people directory, so a community
+  // author is the same participant as in Chat, Contacts and Status.
+  const author = findPersonByName(post.author);
+
   return (
     <article
       style={style}
       className="animate-fade-up rounded-3xl border border-border bg-card p-4 shadow-soft"
     >
       <header className="flex items-center gap-3">
-        <Avatar name={post.author} />
+        {author ? (
+          <Link
+            to="/u/$username"
+            params={{ username: author.username }}
+            aria-label={`View @${author.username}'s profile`}
+            className="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+          >
+            <Avatar name={post.author} />
+          </Link>
+        ) : (
+          <Avatar name={post.author} />
+        )}
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[14px] font-bold text-foreground">{post.author}</p>
+          {author ? (
+            <Link
+              to="/u/$username"
+              params={{ username: author.username }}
+              className="block min-w-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+            >
+              <span className="block truncate text-[14px] font-bold text-foreground">
+                {post.author}
+              </span>
+              <UsernameBadge username={author.username} verified={author.verified} tone="muted" />
+            </Link>
+          ) : (
+            <p className="truncate text-[14px] font-bold text-foreground">{post.author}</p>
+          )}
           <p className="truncate text-[12px] text-muted-foreground">
             {post.authorMeta} · {post.time}
           </p>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MessagesSquare, PenSquare, SearchX } from "lucide-react";
+import { Contact, MessagesSquare, PenSquare, SearchX } from "lucide-react";
 import { AppScreen } from "@/components/tian/app-screen";
 import { SearchField } from "@/components/community/search-field";
 import { ChatList } from "@/components/chat/chat-list";
@@ -62,9 +62,14 @@ function ChatsInbox() {
           <Button
             asChild
             size="sm"
-            variant="soft"
-            className="ml-auto h-11 rounded-full px-4 text-xs"
+            variant="ghost"
+            className="ml-auto h-11 rounded-full px-3 text-xs"
           >
+            <Link to="/contacts" aria-label="My contacts">
+              <Contact className="size-4" /> Contacts
+            </Link>
+          </Button>
+          <Button asChild size="sm" variant="soft" className="h-11 rounded-full px-4 text-xs">
             <Link to="/chats/new">
               <PenSquare className="size-4" /> New Chat
             </Link>
