@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Award, ChevronRight, Pencil, Settings, Share2, Users } from "lucide-react";
+import { AtSign, Award, ChevronRight, Contact, Pencil, Settings, Share2, Users } from "lucide-react";
 import { toast } from "sonner";
 import { AppScreen } from "@/components/tian/app-screen";
 import { ProfileCard, Tag } from "@/components/tian/profile-card";
@@ -54,6 +54,21 @@ function ProfileScreen() {
     }
   }
 
+  async function shareUsername() {
+    const handle = `@${usernameOf(profile)}`;
+    const text = `Add me on TIAN: ${handle}`;
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({ title: "My TIAN username", text });
+        return;
+      }
+      await navigator.clipboard.writeText(text);
+      toast.success("Username copied");
+    } catch {
+      /* share dismissed */
+    }
+  }
+
   return (
     <AppScreen>
       <ProfileHeader profile={profile} />
@@ -74,6 +89,28 @@ function ProfileScreen() {
             </Link>
           </Button>
         </div>
+
+        <ProfileCard title="My TIAN Username" style={{ animationDelay: "30ms" }}>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-border bg-surface px-3 py-2.5">
+              <AtSign className="size-4 shrink-0 text-primary" aria-hidden="true" />
+              <span className="truncate font-display text-[15px] font-extrabold tracking-tight text-foreground">
+                {usernameOf(profile)}
+              </span>
+            </span>
+            <Button variant="default" size="pillAuto" className="px-4 text-xs" onClick={shareUsername}>
+              <Share2 className="size-4" /> Share My Username
+            </Button>
+          </div>
+          <p className="mt-2.5 text-[11.5px] text-muted-foreground">
+            Share your handle instead of a phone number — Award members can find you with it.
+          </p>
+          <Button asChild variant="soft" size="pillAuto" className="mt-3 w-full text-xs">
+            <Link to="/contacts">
+              <Contact className="size-4" /> My Contacts
+            </Link>
+          </Button>
+        </ProfileCard>
 
         <ProfileCard title="About" style={{ animationDelay: "60ms" }}>
           <p className="text-[13.5px] leading-relaxed text-muted-foreground">
