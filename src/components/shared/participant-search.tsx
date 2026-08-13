@@ -29,7 +29,9 @@ export function ParticipantSearch({
   emptyTitle?: string;
   emptyCopy?: string;
 }) {
-  const results = searchPeople(query, pool);
+  // Blocked participants are never discoverable anywhere in TIAN.
+  const blockedIds = useBlockedIds();
+  const results = searchPeople(query, pool).filter((p) => !blockedIds.includes(p.id));
 
   return (
     <div className="space-y-4">
