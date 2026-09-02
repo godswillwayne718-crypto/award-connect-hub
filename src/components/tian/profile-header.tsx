@@ -21,10 +21,10 @@ export function ProfileHeader({ profile }: { profile: TianProfile }) {
         />
         <button
           type="button"
-          className="absolute right-4 top-4 grid size-9 place-items-center rounded-full bg-background/20 text-primary-foreground backdrop-blur transition-transform duration-200 active:scale-95"
+          className="absolute right-4 top-4 grid size-11 place-items-center rounded-full bg-background/20 text-primary-foreground backdrop-blur transition-transform duration-200 active:scale-95"
           aria-label="Change cover photo"
         >
-          <Camera className="size-4" />
+          <Camera className="size-4" aria-hidden="true" />
         </button>
       </div>
 
@@ -35,10 +35,10 @@ export function ProfileHeader({ profile }: { profile: TianProfile }) {
           </span>
           <button
             type="button"
-            className="absolute bottom-1 right-1 grid size-7 place-items-center rounded-full bg-accent text-accent-foreground ring-2 ring-background transition-transform duration-200 active:scale-95"
+            className="absolute bottom-0 right-0 grid size-9 place-items-center rounded-full bg-accent text-accent-foreground ring-2 ring-background transition-transform duration-200 active:scale-95"
             aria-label="Change profile photo"
           >
-            <Camera className="size-3.5" />
+            <Camera className="size-4" aria-hidden="true" />
           </button>
         </div>
 

@@ -90,9 +90,13 @@ function HomeScreen() {
               </p>
             </div>
           </div>
-          <button className="press relative grid size-10 shrink-0 place-items-center rounded-xl bg-primary-foreground/10 text-primary-foreground">
-            <Bell className="size-[18px]" />
-            <span className="absolute right-2 top-2 size-2 rounded-full bg-gold" />
+          <button
+            type="button"
+            aria-label="Notifications"
+            className="press relative grid size-11 shrink-0 place-items-center rounded-xl bg-primary-foreground/10 text-primary-foreground"
+          >
+            <Bell className="size-[18px]" aria-hidden="true" />
+            <span className="absolute right-2.5 top-2.5 size-2 rounded-full bg-gold" />
           </button>
         </div>
 
@@ -109,8 +113,12 @@ function HomeScreen() {
             Your profile is <span className="font-bold text-gold">70% complete</span> — add your
             Award Centre to unlock verified status.
           </p>
-          <Link to="/profile-setup" className="shrink-0 text-gold">
-            <ChevronRight className="size-4" />
+          <Link
+            to="/profile-setup"
+            aria-label="Complete your profile"
+            className="grid size-11 shrink-0 place-items-center rounded-full text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50"
+          >
+            <ChevronRight className="size-4" aria-hidden="true" />
           </Link>
         </div>
       </header>
