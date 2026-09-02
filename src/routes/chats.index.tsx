@@ -50,12 +50,12 @@ function ChatsInbox() {
   return (
     <AppScreen>
       <header className="sticky top-0 z-20 border-b border-border bg-background/95 px-5 pb-3 pt-6 backdrop-blur">
-        <div className="flex items-center gap-3">
-          <h1 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
+        <div className="flex items-center gap-2">
+          <h1 className="min-w-0 truncate font-display text-2xl font-extrabold tracking-tight text-foreground">
             Chats
           </h1>
           {unread > 0 ? (
-            <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-bold text-accent-foreground">
+            <span className="shrink-0 rounded-full bg-accent px-2 py-0.5 text-[11px] font-bold text-accent-foreground">
               {unread} new
             </span>
           ) : null}
@@ -63,15 +63,22 @@ function ChatsInbox() {
             asChild
             size="sm"
             variant="ghost"
-            className="ml-auto h-11 rounded-full px-3 text-xs"
+            className="ml-auto size-11 shrink-0 rounded-full p-0 text-xs min-[430px]:h-11 min-[430px]:w-auto min-[430px]:px-3"
           >
             <Link to="/contacts" aria-label="My contacts">
-              <Contact className="size-4" /> Contacts
+              <Contact className="size-4" />
+              <span className="hidden min-[430px]:inline">Contacts</span>
             </Link>
           </Button>
-          <Button asChild size="sm" variant="soft" className="h-11 rounded-full px-4 text-xs">
-            <Link to="/chats/new">
-              <PenSquare className="size-4" /> New Chat
+          <Button
+            asChild
+            size="sm"
+            variant="soft"
+            className="size-11 shrink-0 rounded-full p-0 text-xs min-[430px]:h-11 min-[430px]:w-auto min-[430px]:px-4"
+          >
+            <Link to="/chats/new" aria-label="New chat">
+              <PenSquare className="size-4" />
+              <span className="hidden min-[430px]:inline">New Chat</span>
             </Link>
           </Button>
         </div>
