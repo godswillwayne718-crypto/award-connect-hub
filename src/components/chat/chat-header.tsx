@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronLeft, MoreVertical, Ban, Flag, MinusCircle } from "lucide-react";
+import { ChevronLeft, MoreVertical, Ban, Flag, MinusCircle, Phone, Video } from "lucide-react";
 import { toast } from "sonner";
 import type { ChatParticipant } from "@/lib/chat-data";
 import { ChatAvatar, VerifiedMark } from "@/components/chat/chat-avatar";
@@ -20,7 +20,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 /** Conversation header with presence and the safety menu. */
-export function ChatHeader({ participant }: { participant: ChatParticipant }) {
+export function ChatHeader({
+  participant,
+  onStartCall,
+}: {
+  participant: ChatParticipant;
+  onStartCall?: (mode: "audio" | "video") => void;
+}) {
   const blocked = useIsBlocked(participant.id);
   const restricted = useIsRestricted(participant.id);
 
@@ -45,6 +51,29 @@ export function ChatHeader({ participant }: { participant: ChatParticipant }) {
           @{participant.username} · {blocked ? "Blocked" : participant.lastSeen}
         </p>
       </div>
+
+      {onStartCall ? (
+        <>
+          <button
+            type="button"
+            aria-label={`Voice call ${participant.name}`}
+            disabled={blocked}
+            onClick={() => onStartCall("audio")}
+            className="grid size-10 shrink-0 place-items-center rounded-full text-foreground transition-colors hover:bg-surface disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+          >
+            <Phone className="size-[19px]" />
+          </button>
+          <button
+            type="button"
+            aria-label={`Video call ${participant.name}`}
+            disabled={blocked}
+            onClick={() => onStartCall("video")}
+            className="grid size-10 shrink-0 place-items-center rounded-full text-foreground transition-colors hover:bg-surface disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+          >
+            <Video className="size-[19px]" />
+          </button>
+        </>
+      ) : null}
 
       <DropdownMenu>
         <DropdownMenuTrigger
