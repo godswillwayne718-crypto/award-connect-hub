@@ -1,13 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessagesSquare } from "lucide-react";
 import { ChatHeader } from "@/components/chat/chat-header";
 import { MessageList } from "@/components/chat/message-list";
 import { MessageComposer } from "@/components/chat/message-composer";
+import { CallOverlay } from "@/components/chat/call-overlay";
 import { ChatEmptyState } from "@/components/chat/chat-empty-state";
 import { Button } from "@/components/ui/button";
-import { findParticipant } from "@/lib/chat-data";
-import { markRead, sendMessage, useChat, useIsBlocked } from "@/lib/chat-store";
+import { findParticipant, type CallMode } from "@/lib/chat-data";
+import { logCall, markRead, sendMessage, sendVoiceNote, useChat, useIsBlocked } from "@/lib/chat-store";
 
 export const Route = createFileRoute("/chats/$chatId")({
   head: () => ({
@@ -31,6 +32,7 @@ function ConversationScreen() {
   const chat = useChat(chatId);
   const participant = chat ? findParticipant(chat.participantId) : undefined;
   const blocked = useIsBlocked(chat?.participantId ?? "");
+  const [call, setCall] = useState<CallMode | null>(null);
 
   useEffect(() => {
     if (chat) markRead(chat.id);
@@ -56,7 +58,7 @@ function ConversationScreen() {
   return (
     <div className="w-full bg-surface">
       <div className="mx-auto flex h-dvh w-full max-w-md flex-col bg-background">
-        <ChatHeader participant={participant} />
+        <ChatHeader participant={participant} onStartCall={(mode) => setCall(mode)} />
 
         {chat.messages.length === 0 ? (
           <div className="flex min-h-0 flex-1 items-center justify-center px-6">
@@ -72,10 +74,22 @@ function ConversationScreen() {
 
         <MessageComposer
           onSend={(body) => sendMessage(chat.id, body)}
+          onVoiceNote={(url, duration) => sendVoiceNote(chat.id, url, duration)}
           disabled={blocked}
           disabledCopy="You blocked this member. Unblock them from the menu to continue."
         />
       </div>
+
+      {call ? (
+        <CallOverlay
+          participant={participant}
+          mode={call}
+          onEnd={(duration) => {
+            logCall(chat.id, call, duration > 0 ? "completed" : "missed", duration);
+            setCall(null);
+          }}
+        />
+      ) : null}
     </div>
   );
 }
