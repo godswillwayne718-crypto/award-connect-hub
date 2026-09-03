@@ -74,8 +74,7 @@ export function VoiceMessage({ message, mine }: { message: Message; mine: boolea
           mine ? "bg-primary-foreground/15 text-primary-foreground" : "bg-surface text-primary",
         )}
       >
-        {playing ? <Play className="size-4" /> : <Play className="size-4" />}
-        {playing ? <Pause className="sr-only" /> : null}
+        {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
       </button>
       <div className="min-w-0 flex-1">
         <div className="flex h-6 items-center gap-[3px]" aria-hidden="true">
