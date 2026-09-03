@@ -22,6 +22,12 @@ export type ChatAwardLevel = PersonLevel;
 
 export type MessageStatus = "sent" | "delivered" | "read";
 
+/** Text, a recorded voice note, or a call log entry. */
+export type MessageKind = "text" | "voice" | "call";
+
+export type CallMode = "audio" | "video";
+export type CallOutcome = "completed" | "missed" | "declined";
+
 export interface Message {
   id: string;
   chatId: string;
@@ -31,6 +37,14 @@ export interface Message {
   /** ISO timestamp. */
   sentAt: string;
   status: MessageStatus;
+  /** Defaults to "text" when absent. */
+  kind?: MessageKind;
+  /** Voice notes and calls: length in seconds. */
+  durationSec?: number;
+  /** Voice notes: local object URL (lost after a reload — MVP only). */
+  audioUrl?: string;
+  /** Call log entries. */
+  call?: { mode: CallMode; outcome: CallOutcome };
 }
 
 export interface Chat {

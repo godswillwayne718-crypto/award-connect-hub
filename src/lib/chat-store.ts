@@ -3,6 +3,8 @@ import {
   ME,
   SEED_CHATS,
   findParticipant,
+  type CallMode,
+  type CallOutcome,
   type Chat,
   type ChatParticipant,
   type Message,
@@ -126,6 +128,55 @@ export function sendMessage(chatId: string, body: string) {
     body: trimmed,
     sentAt: new Date().toISOString(),
     status: "delivered",
+  };
+  commit({
+    ...state,
+    chats: state.chats.map((c) =>
+      c.id === chatId ? { ...c, messages: [...c.messages, message] } : c,
+    ),
+  });
+}
+
+/** Append a recorded voice note. The object URL only lives for this session. */
+export function sendVoiceNote(chatId: string, audioUrl: string, durationSec: number) {
+  hydrate();
+  const message: Message = {
+    id: newId("m"),
+    chatId,
+    authorId: ME,
+    body: "Voice message",
+    sentAt: new Date().toISOString(),
+    status: "delivered",
+    kind: "voice",
+    durationSec: Math.max(1, Math.round(durationSec)),
+    audioUrl,
+  };
+  commit({
+    ...state,
+    chats: state.chats.map((c) =>
+      c.id === chatId ? { ...c, messages: [...c.messages, message] } : c,
+    ),
+  });
+}
+
+/** Record a finished call in the conversation timeline. */
+export function logCall(
+  chatId: string,
+  mode: CallMode,
+  outcome: CallOutcome,
+  durationSec = 0,
+) {
+  hydrate();
+  const message: Message = {
+    id: newId("m"),
+    chatId,
+    authorId: ME,
+    body: mode === "video" ? "Video call" : "Voice call",
+    sentAt: new Date().toISOString(),
+    status: "delivered",
+    kind: "call",
+    durationSec: Math.round(durationSec),
+    call: { mode, outcome },
   };
   commit({
     ...state,

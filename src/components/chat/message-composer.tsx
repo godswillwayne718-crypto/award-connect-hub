@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Paperclip, Send, Smile } from "lucide-react";
 import { toast } from "sonner";
+import { VoiceRecorder } from "@/components/chat/voice-recorder";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,10 +10,12 @@ import { cn } from "@/lib/utils";
  */
 export function MessageComposer({
   onSend,
+  onVoiceNote,
   disabled = false,
   disabledCopy,
 }: {
   onSend: (body: string) => void;
+  onVoiceNote?: (audioUrl: string, durationSec: number) => void;
   disabled?: boolean;
   disabledCopy?: string;
 }) {
@@ -80,20 +83,24 @@ export function MessageComposer({
             <Smile className="size-[19px]" />
           </button>
         </div>
-        <button
-          type="button"
-          aria-label="Send message"
-          onClick={send}
-          disabled={!value.trim()}
-          className={cn(
-            "grid size-11 shrink-0 place-items-center rounded-full transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-            value.trim()
-              ? "bg-primary text-primary-foreground shadow-lift"
-              : "cursor-not-allowed bg-surface text-muted-foreground",
-          )}
-        >
-          <Send className="size-[18px]" />
-        </button>
+        {value.trim() || !onVoiceNote ? (
+          <button
+            type="button"
+            aria-label="Send message"
+            onClick={send}
+            disabled={!value.trim()}
+            className={cn(
+              "grid size-11 shrink-0 place-items-center rounded-full transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+              value.trim()
+                ? "bg-primary text-primary-foreground shadow-lift"
+                : "cursor-not-allowed bg-surface text-muted-foreground",
+            )}
+          >
+            <Send className="size-[18px]" />
+          </button>
+        ) : (
+          <VoiceRecorder onRecorded={onVoiceNote} />
+        )}
       </div>
     </div>
   );
