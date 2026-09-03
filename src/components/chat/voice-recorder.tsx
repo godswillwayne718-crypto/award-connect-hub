@@ -23,6 +23,7 @@ export function VoiceRecorder({
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
   const keepRef = useRef(true);
+  const startedAtRef = useRef(0);
 
   useEffect(() => {
     if (!recording) return;
@@ -46,7 +47,7 @@ export function VoiceRecorder({
       recorder.onstop = () => {
         stream.getTracks().forEach((t) => t.stop());
         const keep = keepRef.current;
-        const length = seconds;
+        const length = (Date.now() - startedAtRef.current) / 1000;
         const blob = new Blob(chunksRef.current, { type: recorder.mimeType || "audio/webm" });
         setRecording(false);
         setSeconds(0);
@@ -55,9 +56,10 @@ export function VoiceRecorder({
           toast("That recording was too short — hold on a moment longer");
           return;
         }
-        onRecorded(URL.createObjectURL(blob), Math.max(1, length));
+        onRecorded(URL.createObjectURL(blob), Math.max(1, Math.round(length)));
       };
       recorder.start();
+      startedAtRef.current = Date.now();
       recorderRef.current = recorder;
       setSeconds(0);
       setRecording(true);
