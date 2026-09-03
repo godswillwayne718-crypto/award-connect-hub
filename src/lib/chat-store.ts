@@ -3,6 +3,8 @@ import {
   ME,
   SEED_CHATS,
   findParticipant,
+  type CallMode,
+  type CallOutcome,
   type Chat,
   type ChatParticipant,
   type Message,
