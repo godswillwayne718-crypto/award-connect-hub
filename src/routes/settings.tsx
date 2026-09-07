@@ -166,6 +166,16 @@ function MessagePrivacyCard() {
           );
         })}
       </ul>
+      {privacy === "except" ? (
+        <ContactPicker mode="except" selected={exceptIds} onToggle={toggleStatusExcept} />
+      ) : null}
+      {privacy === "only" ? (
+        <ContactPicker mode="only" selected={onlyIds} onToggle={toggleStatusOnly} />
+      ) : null}
+      <p className="mt-2 px-1 text-[11px] leading-relaxed text-muted-foreground">
+        Saved on this device only. Status privacy moves to your TIAN account when accounts go
+        online.
+      </p>
     </ProfileCard>
   );
 }
@@ -175,8 +185,73 @@ const STATUS_PRIVACY_OPTIONS: { value: StatusPrivacy; hint: string }[] = [
   { value: "everyone", hint: "Any TIAN member can see your updates" },
   { value: "contacts", hint: "Only people in your contacts" },
   { value: "verified", hint: "Only verified Award accounts" },
+  { value: "except", hint: "All contacts apart from the people you pick" },
+  { value: "only", hint: "Just the contacts you pick" },
   { value: "nobody", hint: "Turn off Status sharing" },
 ];
+
+/** Contact picker used by the "except" and "only" audiences. */
+function ContactPicker({
+  mode,
+  selected,
+  onToggle,
+}: {
+  mode: "except" | "only";
+  selected: string[];
+  onToggle: (id: string) => void;
+}) {
+  const contacts = useContacts();
+  if (contacts.length === 0) {
+    return (
+      <p className="mt-2 rounded-2xl bg-surface p-3 text-[12px] leading-relaxed text-muted-foreground">
+        You have no contacts yet, so nobody can be picked. Add contacts first — until then this
+        audience shows your Status to no one.
+      </p>
+    );
+  }
+  return (
+    <div className="mt-2 rounded-2xl bg-surface p-2">
+      <p className="px-1 pb-1 text-[11.5px] font-semibold text-muted-foreground">
+        {mode === "except" ? "Hide my Status from" : "Share my Status with"} · {selected.length}{" "}
+        selected
+      </p>
+      <ul className="max-h-64 space-y-0.5 overflow-y-auto">
+        {contacts.map((person) => {
+          const checked = selected.includes(person.id);
+          return (
+            <li key={person.id}>
+              <button
+                type="button"
+                role="checkbox"
+                aria-checked={checked}
+                onClick={() => onToggle(person.id)}
+                className="flex min-h-11 w-full items-center gap-3 rounded-xl px-2 text-left transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+              >
+                <span
+                  className={
+                    checked
+                      ? "grid size-5 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground"
+                      : "grid size-5 shrink-0 place-items-center rounded-md border-2 border-border"
+                  }
+                >
+                  {checked ? <Check className="size-3.5" aria-hidden="true" /> : null}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[13px] font-bold text-foreground">
+                    {person.name}
+                  </span>
+                  <span className="block truncate text-[11.5px] text-muted-foreground">
+                    @{person.username}
+                  </span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 
 /** Status audience control — enforced by the Status feed and viewer. */
 function StatusPrivacyCard() {
@@ -217,6 +292,16 @@ function StatusPrivacyCard() {
           );
         })}
       </ul>
+      {privacy === "except" ? (
+        <ContactPicker mode="except" selected={exceptIds} onToggle={toggleStatusExcept} />
+      ) : null}
+      {privacy === "only" ? (
+        <ContactPicker mode="only" selected={onlyIds} onToggle={toggleStatusOnly} />
+      ) : null}
+      <p className="mt-2 px-1 text-[11px] leading-relaxed text-muted-foreground">
+        Saved on this device only. Status privacy moves to your TIAN account when accounts go
+        online.
+      </p>
     </ProfileCard>
   );
 }
