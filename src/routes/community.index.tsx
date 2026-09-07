@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Compass, Plus, SearchX, Sparkles, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { AppScreen } from "@/components/tian/app-screen";
 import { CategoryChips } from "@/components/community/category-chips";
 import { CommunityCard, CommunityRow } from "@/components/community/community-card";
@@ -9,7 +10,7 @@ import { SearchField } from "@/components/community/search-field";
 import { SectionHeading } from "@/components/community/section-heading";
 import { CommunityListSkeleton } from "@/components/community/skeletons";
 import { useBriefLoading } from "@/hooks/use-brief-loading";
-import { CATEGORIES, COMMUNITIES } from "@/lib/community-data";
+import { COMMUNITIES, availableCategories } from "@/lib/community-data";
 import { useCanCreateCommunity, useJoined } from "@/lib/community-store";
 
 export const Route = createFileRoute("/community/")({
@@ -34,6 +35,51 @@ export const Route = createFileRoute("/community/")({
 });
 
 function CommunityFeed() {
+  if (COMMUNITIES.length === 0) return <NoCommunitiesYet />;
+  return <CommunityBrowser />;
+}
+
+/**
+ * Honest state while no verified communities exist. Nothing is fabricated —
+ * the browser below takes over automatically as soon as real records land.
+ */
+function NoCommunitiesYet() {
+  return (
+    <AppScreen>
+      <header className="rounded-b-3xl bg-navy-gradient px-5 pb-6 pt-8 shadow-lift">
+        <h1 className="font-display text-[22px] font-extrabold tracking-tight text-primary-foreground">
+          Communities
+        </h1>
+        <p className="mt-1 text-[13px] text-primary-foreground/70">
+          Groups across the International Award network.
+        </p>
+        <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-gold">
+          <Sparkles className="size-3.5" aria-hidden="true" />
+          Coming soon
+        </span>
+      </header>
+
+      <div className="mx-auto w-full max-w-2xl space-y-4 px-5 pt-6">
+        <EmptyState
+          icon={Users}
+          title="No communities yet"
+          copy="Communities are being built on TIAN. Check back soon to discover communities around opportunities, universities, awards, interests and more."
+          action={
+            <Button asChild size="pillAuto" variant="soft">
+              <Link to="/opportunities">See opportunities</Link>
+            </Button>
+          }
+        />
+        <p className="px-1 text-center text-[11.5px] leading-relaxed text-muted-foreground">
+          Universities and organisations will get official listings under Opportunities. They only
+          become communities once a real, verified group exists.
+        </p>
+      </div>
+    </AppScreen>
+  );
+}
+
+function CommunityBrowser() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
   const joinedIds = useJoined();
@@ -91,7 +137,7 @@ function CommunityFeed() {
 
       <div className="mx-auto w-full max-w-2xl">
         <div className="px-5 pt-4">
-          <CategoryChips categories={CATEGORIES} value={category} onChange={setCategory} />
+          <CategoryChips categories={availableCategories()} value={category} onChange={setCategory} />
         </div>
 
         {loading ? (

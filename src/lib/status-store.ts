@@ -8,17 +8,36 @@ import { findPerson, type Person } from "@/lib/people-data";
  */
 const STORAGE_KEY = "tian.status.v1";
 
-export type StatusPrivacy = "everyone" | "contacts" | "verified" | "nobody";
+export type StatusPrivacy =
+  | "everyone"
+  | "contacts"
+  | "verified"
+  | "except"
+  | "only"
+  | "nobody";
 
 export interface StatusState {
   mine: Status[];
   viewed: string[];
   privacy: StatusPrivacy;
+  /** Contacts excluded when privacy is "except". */
+  exceptIds: string[];
+  /** The only contacts included when privacy is "only". */
+  onlyIds: string[];
+  /** Local view counts per status id (this device only). */
+  views: Record<string, number>;
 }
 
 export const ME = "me";
 
-const EMPTY: StatusState = { mine: [], viewed: [], privacy: "everyone" };
+const EMPTY: StatusState = {
+  mine: [],
+  viewed: [],
+  privacy: "everyone",
+  exceptIds: [],
+  onlyIds: [],
+  views: {},
+};
 
 let state: StatusState = EMPTY;
 let hydrated = false;
@@ -109,12 +128,34 @@ export function deleteStatus(statusId: string) {
 export function markStatusViewed(statusId: string) {
   hydrate();
   if (state.viewed.includes(statusId)) return;
-  commit({ ...state, viewed: [...state.viewed, statusId] });
+  commit({
+    ...state,
+    viewed: [...state.viewed, statusId],
+    views: { ...state.views, [statusId]: (state.views[statusId] ?? 0) + 1 },
+  });
 }
 
 export function setStatusPrivacy(privacy: StatusPrivacy) {
   hydrate();
   commit({ ...state, privacy });
+}
+
+/** Toggle a contact in the "Contacts except…" exclusion list. */
+export function toggleStatusExcept(personId: string) {
+  hydrate();
+  const exceptIds = state.exceptIds.includes(personId)
+    ? state.exceptIds.filter((id) => id !== personId)
+    : [...state.exceptIds, personId];
+  commit({ ...state, exceptIds });
+}
+
+/** Toggle a contact in the "Only share with…" allow list. */
+export function toggleStatusOnly(personId: string) {
+  hydrate();
+  const onlyIds = state.onlyIds.includes(personId)
+    ? state.onlyIds.filter((id) => id !== personId)
+    : [...state.onlyIds, personId];
+  commit({ ...state, onlyIds });
 }
 
 /* ------------------------------------------------------------- visibility */
@@ -126,7 +167,13 @@ export function setStatusPrivacy(privacy: StatusPrivacy) {
  */
 export function canViewStatus(
   person: Person | undefined,
-  opts: { privacy: StatusPrivacy; isContact: boolean; blocked: boolean },
+  opts: {
+    privacy: StatusPrivacy;
+    isContact: boolean;
+    blocked: boolean;
+    exceptIds?: string[];
+    onlyIds?: string[];
+  },
 ): boolean {
   if (!person || opts.blocked) return false;
   switch (opts.privacy) {
@@ -136,6 +183,10 @@ export function canViewStatus(
       return opts.isContact;
     case "verified":
       return person.verified;
+    case "except":
+      return opts.isContact && !(opts.exceptIds ?? []).includes(person.id);
+    case "only":
+      return (opts.onlyIds ?? []).includes(person.id);
     case "nobody":
       return false;
   }
@@ -145,6 +196,8 @@ export const PRIVACY_LABEL: Record<StatusPrivacy, string> = {
   everyone: "Everyone",
   contacts: "My Contacts",
   verified: "Verified Award Members",
+  except: "Contacts except…",
+  only: "Only share with…",
   nobody: "Nobody",
 };
 
@@ -160,6 +213,19 @@ export function useStatusPrivacy(): StatusPrivacy {
 
 export function useViewedIds(): string[] {
   return useStore((s) => s.viewed, EMPTY.viewed);
+}
+
+export function useStatusExceptIds(): string[] {
+  return useStore((s) => s.exceptIds, EMPTY.exceptIds);
+}
+
+export function useStatusOnlyIds(): string[] {
+  return useStore((s) => s.onlyIds, EMPTY.onlyIds);
+}
+
+/** Local view count for one of my statuses. */
+export function useStatusViews(statusId: string): number {
+  return useStore((s) => s.views[statusId] ?? 0, 0);
 }
 
 /** Seeded updates from other members, newest first. */
