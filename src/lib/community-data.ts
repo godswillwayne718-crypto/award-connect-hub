@@ -97,7 +97,16 @@ const SHARED_RULES = [
   "Credit sources when you share resources, routes or templates.",
 ];
 
-export const COMMUNITIES: Community[] = [
+/**
+ * No verified communities exist on TIAN yet. The seed catalogue below stays in
+ * the codebase as the shape real data will take; flip COMMUNITY_DATA_AVAILABLE
+ * to true (or replace the array with real records) once verified communities
+ * are onboarded. Until then every Community surface renders an empty state
+ * rather than fabricated groups.
+ */
+export const COMMUNITY_DATA_AVAILABLE = false;
+
+const SEED_COMMUNITIES: Community[] = [
   {
     id: "leadership",
     name: "Leadership & Personal Development",
@@ -240,8 +249,17 @@ export const COMMUNITIES: Community[] = [
   },
 ];
 
+export const COMMUNITIES: Community[] = COMMUNITY_DATA_AVAILABLE ? SEED_COMMUNITIES : [];
+
+/** Categories are only surfaced for categories that have real communities. */
+export function availableCategories(): CommunityCategory[] {
+  return CATEGORIES.filter((c) => COMMUNITIES.some((community) => community.category === c));
+}
+
 /** Communities the signed-in member has joined by default. */
-export const DEFAULT_JOINED = ["leadership", "expeditions", "alumni"];
+export const DEFAULT_JOINED: string[] = COMMUNITY_DATA_AVAILABLE
+  ? ["leadership", "expeditions", "alumni"]
+  : [];
 
 export const POSTS: CommunityPost[] = [
   // Leadership & Personal Development
@@ -681,10 +699,12 @@ export function getCommunity(id: string) {
 }
 
 export function postsFor(id: string) {
+  if (!getCommunity(id)) return [];
   return POSTS.filter((p) => p.communityId === id);
 }
 
 export function membersFor(id: string): CommunityMember[] {
+  if (!getCommunity(id)) return [];
   return MEMBERS_BY_COMMUNITY[id] ?? [];
 }
 
