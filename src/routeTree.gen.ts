@@ -13,6 +13,7 @@ import { Route as StatusRouteImport } from './routes/status'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ProfileSetupRouteImport } from './routes/profile-setup'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CreateAccountRouteImport } from './routes/create-account'
 import { Route as ContactsRouteImport } from './routes/contacts'
@@ -52,6 +53,11 @@ const ProfileSetupRoute = ProfileSetupRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpportunitiesRoute = OpportunitiesRouteImport.update({
+  id: '/opportunities',
+  path: '/opportunities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRoute = HomeRouteImport.update({
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/contacts': typeof ContactsRoute
   '/create-account': typeof CreateAccountRoute
   '/home': typeof HomeRoute
+  '/opportunities': typeof OpportunitiesRoute
   '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/contacts': typeof ContactsRoute
   '/create-account': typeof CreateAccountRoute
   '/home': typeof HomeRoute
+  '/opportunities': typeof OpportunitiesRoute
   '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/contacts': typeof ContactsRoute
   '/create-account': typeof CreateAccountRoute
   '/home': typeof HomeRoute
+  '/opportunities': typeof OpportunitiesRoute
   '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/create-account'
     | '/home'
+    | '/opportunities'
     | '/profile'
     | '/profile-setup'
     | '/settings'
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/create-account'
     | '/home'
+    | '/opportunities'
     | '/profile'
     | '/profile-setup'
     | '/settings'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/create-account'
     | '/home'
+    | '/opportunities'
     | '/profile'
     | '/profile-setup'
     | '/settings'
@@ -318,6 +330,7 @@ export interface RootRouteChildren {
   ContactsRoute: typeof ContactsRoute
   CreateAccountRoute: typeof CreateAccountRoute
   HomeRoute: typeof HomeRoute
+  OpportunitiesRoute: typeof OpportunitiesRoute
   ProfileRoute: typeof ProfileRoute
   ProfileSetupRoute: typeof ProfileSetupRoute
   SettingsRoute: typeof SettingsRoute
@@ -353,6 +366,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/opportunities': {
+      id: '/opportunities'
+      path: '/opportunities'
+      fullPath: '/opportunities'
+      preLoaderRoute: typeof OpportunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -566,6 +586,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactsRoute: ContactsRoute,
   CreateAccountRoute: CreateAccountRoute,
   HomeRoute: HomeRoute,
+  OpportunitiesRoute: OpportunitiesRoute,
   ProfileRoute: ProfileRoute,
   ProfileSetupRoute: ProfileSetupRoute,
   SettingsRoute: SettingsRoute,

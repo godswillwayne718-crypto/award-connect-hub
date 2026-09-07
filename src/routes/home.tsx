@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { AppScreen } from "@/components/tian/app-screen";
 import { TianLogo } from "@/components/tian/tian-logo";
+import { EmptyState } from "@/components/community/empty-state";
 import { useProfile } from "@/lib/tian-store";
 
 export const Route = createFileRoute("/home")({
@@ -29,41 +30,11 @@ export const Route = createFileRoute("/home")({
 });
 
 const quickActions = [
-  { icon: Users, label: "Find peers", tone: "primary" },
-  { icon: Compass, label: "Centres", tone: "accent" },
-  { icon: CalendarDays, label: "Journeys", tone: "gold" },
-  { icon: Sparkles, label: "Opportunities", tone: "primary" },
+  { icon: Users, label: "Find peers", tone: "primary", to: "/contacts" },
+  { icon: Sparkles, label: "Opportunities", tone: "primary", to: "/opportunities" },
+  { icon: Compass, label: "Centres", tone: "accent", to: null },
+  { icon: CalendarDays, label: "Journeys", tone: "gold", to: null },
 ] as const;
-
-const feed = [
-  {
-    name: "Nairobi Award Centre",
-    meta: "Award Centre · Kenya",
-    time: "2h",
-    body: "18 participants completed their Silver Adventurous Journey across the Ngong Hills this weekend. Proud of every one of them.",
-    tag: "Milestone",
-    likes: 214,
-    comments: 32,
-  },
-  {
-    name: "Priya Raghavan",
-    meta: "Gold Award alumni · India",
-    time: "5h",
-    body: "Sharing the residential project template that helped me plan mine end to end. Happy to answer questions from anyone starting Gold.",
-    tag: "Resource",
-    likes: 96,
-    comments: 41,
-  },
-  {
-    name: "University of Edinburgh",
-    meta: "University partner · UK",
-    time: "1d",
-    body: "Our 2026 Award recognition scholarship applications open next month for Gold Award holders worldwide.",
-    tag: "Opportunity",
-    likes: 431,
-    comments: 87,
-  },
-];
 
 const toneClass = {
   primary: "bg-primary-soft text-primary",
@@ -125,62 +96,63 @@ function HomeScreen() {
 
       <section className="px-5 pt-6">
         <div className="grid grid-cols-4 gap-2.5">
-          {quickActions.map(({ icon: Icon, label, tone }) => (
-            <button key={label} className="press flex flex-col items-center gap-2">
-              <span
-                className={`grid size-14 place-items-center rounded-2xl ${toneClass[tone]} shadow-soft`}
+          {quickActions.map(({ icon: Icon, label, tone, to }) =>
+            to ? (
+              <Link
+                key={label}
+                to={to}
+                className="press flex flex-col items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 rounded-2xl"
               >
-                <Icon className="size-5" />
-              </span>
-              <span className="text-[10px] font-semibold leading-tight text-muted-foreground">
-                {label}
-              </span>
-            </button>
-          ))}
+                <span
+                  className={`grid size-14 place-items-center rounded-2xl ${toneClass[tone]} shadow-soft`}
+                >
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">
+                  {label}
+                </span>
+              </Link>
+            ) : (
+              <div key={label} className="flex flex-col items-center gap-2 opacity-55">
+                <span
+                  className={`grid size-14 place-items-center rounded-2xl ${toneClass[tone]} shadow-soft`}
+                >
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+                <span className="text-[10px] font-semibold leading-tight text-muted-foreground">
+                  {label}
+                </span>
+                <span className="sr-only">Coming soon</span>
+              </div>
+            ),
+          )}
         </div>
       </section>
 
-      <section className="px-5 pt-7">
+      <section className="px-5 pb-2 pt-7">
         <div className="flex items-baseline justify-between">
           <h2 className="font-display text-base font-extrabold text-foreground">
             Community highlights
           </h2>
-          <span className="text-xs font-semibold text-accent">Live</span>
+          <span className="rounded-full bg-gold-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-gold-foreground">
+            Coming soon
+          </span>
         </div>
 
-        <div className="mt-3 space-y-3">
-          {feed.map((post) => (
-            <article
-              key={post.name}
-              className="press rounded-3xl border border-border bg-card p-4 shadow-soft animate-fade-up"
-            >
-              <div className="flex items-center gap-3">
-                <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary-soft font-display text-sm font-extrabold text-primary">
-                  {post.name
-                    .split(" ")
-                    .slice(0, 2)
-                    .map((w) => w[0])
-                    .join("")}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold text-foreground">{post.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">{post.meta}</p>
-                </div>
-                <span className="shrink-0 text-[11px] text-muted-foreground">{post.time}</span>
-              </div>
-
-              <p className="mt-3 text-[13.5px] leading-relaxed text-foreground/85">{post.body}</p>
-
-              <div className="mt-3.5 flex items-center gap-2">
-                <span className="rounded-full bg-gold-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-gold-foreground">
-                  {post.tag}
-                </span>
-                <span className="ml-auto text-xs font-medium text-muted-foreground">
-                  {post.likes} · {post.comments} replies
-                </span>
-              </div>
-            </article>
-          ))}
+        <div className="mt-3">
+          <EmptyState
+            icon={Compass}
+            title="Nothing to show yet"
+            copy="Highlights from communities, centres and verified opportunities will appear here as TIAN grows. In the meantime, share a Status or start a conversation."
+            action={
+              <Link
+                to="/status"
+                className="inline-flex min-h-11 items-center rounded-full bg-primary px-5 text-[13px] font-bold text-primary-foreground transition-transform duration-200 active:scale-95"
+              >
+                Share a Status
+              </Link>
+            }
+          />
         </div>
       </section>
     </AppScreen>
