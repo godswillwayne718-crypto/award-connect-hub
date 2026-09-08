@@ -14,13 +14,244 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      blocks: {
+        Row: {
+          blocked_user_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          blocked_user_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          blocked_user_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          contact_user_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          contact_user_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          contact_user_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      conversations: {
+        Row: {
+          created_at: string
+          id: string
+          last_message_at: string
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          user_a?: string
+          user_b?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          body: string
+          call_mode: string | null
+          call_outcome: string | null
+          conversation_id: string
+          created_at: string
+          duration_sec: number | null
+          id: string
+          kind: string
+          read_at: string | null
+          sender_id: string
+        }
+        Insert: {
+          body?: string
+          call_mode?: string | null
+          call_outcome?: string | null
+          conversation_id: string
+          created_at?: string
+          duration_sec?: number | null
+          id?: string
+          kind?: string
+          read_at?: string | null
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          call_mode?: string | null
+          call_outcome?: string | null
+          conversation_id?: string
+          created_at?: string
+          duration_sec?: number | null
+          id?: string
+          kind?: string
+          read_at?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string
+          centre: string
+          country: string
+          created_at: string
+          email: string | null
+          full_name: string
+          headline: string
+          id: string
+          interests: string[]
+          last_seen_at: string
+          level: string | null
+          online: boolean
+          role: string | null
+          updated_at: string
+          username: string
+          verified: boolean
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string
+          centre?: string
+          country?: string
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          headline?: string
+          id: string
+          interests?: string[]
+          last_seen_at?: string
+          level?: string | null
+          online?: boolean
+          role?: string | null
+          updated_at?: string
+          username: string
+          verified?: boolean
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string
+          centre?: string
+          country?: string
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          headline?: string
+          id?: string
+          interests?: string[]
+          last_seen_at?: string
+          level?: string | null
+          online?: boolean
+          role?: string | null
+          updated_at?: string
+          username?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
+      status_views: {
+        Row: {
+          created_at: string
+          status_id: string
+          viewer_id: string
+        }
+        Insert: {
+          created_at?: string
+          status_id: string
+          viewer_id: string
+        }
+        Update: {
+          created_at?: string
+          status_id?: string
+          viewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "status_views_status_id_fkey"
+            columns: ["status_id"]
+            isOneToOne: false
+            referencedRelation: "statuses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      statuses: {
+        Row: {
+          background: string | null
+          body: string
+          created_at: string
+          expires_at: string
+          id: string
+          kind: string
+          media_url: string | null
+          privacy: string
+          user_id: string
+        }
+        Insert: {
+          background?: string | null
+          body?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          kind?: string
+          media_url?: string | null
+          privacy?: string
+          user_id: string
+        }
+        Update: {
+          background?: string | null
+          body?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          kind?: string
+          media_url?: string | null
+          privacy?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_conversation_member: {
+        Args: { _conversation_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
