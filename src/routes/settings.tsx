@@ -252,6 +252,8 @@ function ContactPicker({
 /** Status audience control — enforced by the Status feed and viewer. */
 function StatusPrivacyCard() {
   const privacy = useStatusPrivacy();
+  const exceptIds = useStatusExceptIds();
+  const onlyIds = useStatusOnlyIds();
   return (
     <ProfileCard title="Who can view my Status?">
       <ul className="space-y-1" role="radiogroup" aria-label="Who can view my Status?">
