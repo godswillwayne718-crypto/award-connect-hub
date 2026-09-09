@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Bell,
+  Check,
   ChevronLeft,
   ChevronRight,
   Globe,
@@ -12,10 +13,15 @@ import {
 } from "lucide-react";
 import { MobileShell } from "@/components/tian/mobile-shell";
 import { ProfileCard } from "@/components/tian/profile-card";
+import { useContacts } from "@/lib/contacts-store";
 import { setMessagePrivacy, useMessagePrivacy, type MessagePrivacy } from "@/lib/chat-store";
 import {
   setStatusPrivacy,
   useStatusPrivacy,
+  useStatusExceptIds,
+  useStatusOnlyIds,
+  toggleStatusExcept,
+  toggleStatusOnly,
   PRIVACY_LABEL,
   type StatusPrivacy,
 } from "@/lib/status-store";
