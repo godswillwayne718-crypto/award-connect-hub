@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Lock, Mail, User } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { MobileShell } from "@/components/tian/mobile-shell";
 import { Field } from "@/components/tian/fields";
 import { StepHeader } from "@/components/tian/step-header";
-import { updateProfile, useProfile } from "@/lib/tian-store";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/create-account")({
   head: () => ({
@@ -14,16 +16,71 @@ export const Route = createFileRoute("/create-account")({
       { name: "description", content: "Join the International Award Network in under a minute." },
       { property: "og:title", content: "Create your TIAN account" },
       { property: "og:description", content: "Join the International Award Network." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: CreateAccount,
 });
 
 function CreateAccount() {
-  const profile = useProfile();
   const navigate = useNavigate();
+  const { userId, loading } = useAuth();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const valid = profile.fullName.trim().length > 1 && profile.email.includes("@") && password.length >= 8;
+  const [busy, setBusy] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false);
+
+  const valid = fullName.trim().length > 1 && email.includes("@") && password.length >= 8;
+
+  useEffect(() => {
+    if (!loading && userId) void navigate({ to: "/account-setup", replace: true });
+  }, [loading, userId, navigate]);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!valid) return;
+    setBusy(true);
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: {
+        emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+        data: { full_name: fullName.trim() },
+      },
+    });
+    setBusy(false);
+
+    if (error) {
+      toast.error(error.message || "We couldn't create your account. Please try again.");
+      return;
+    }
+    if (!data.session) {
+      setCheckEmail(true);
+      return;
+    }
+    toast.success("Account created");
+    void navigate({ to: "/account-setup", replace: true });
+  }
+
+  if (checkEmail) {
+    return (
+      <MobileShell tone="white">
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
+          <h1 className="font-display text-xl font-extrabold tracking-tight text-foreground">
+            Confirm your email
+          </h1>
+          <p className="text-[13px] leading-relaxed text-muted-foreground">
+            We sent a confirmation link to {email}. Open it, then come back and sign in.
+          </p>
+          <Button asChild variant="hero" size="pill" className="mt-2 max-w-xs">
+            <Link to="/sign-in">Go to sign in</Link>
+          </Button>
+        </div>
+      </MobileShell>
+    );
+  }
 
   return (
     <MobileShell tone="white">
@@ -35,13 +92,7 @@ function CreateAccount() {
         </Button>
       </header>
 
-      <form
-        className="flex flex-1 flex-col px-6 pb-8 pt-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (valid) navigate({ to: "/account-setup" });
-        }}
-      >
+      <form className="flex flex-1 flex-col px-6 pb-8 pt-4" onSubmit={submit}>
         <StepHeader
           step={1}
           total={3}
@@ -55,8 +106,8 @@ function CreateAccount() {
             placeholder="Amara Okonkwo"
             icon={<User />}
             autoComplete="name"
-            value={profile.fullName}
-            onChange={(e) => updateProfile({ fullName: e.target.value })}
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
           />
           <Field
             label="Email address"
@@ -64,8 +115,8 @@ function CreateAccount() {
             placeholder="you@example.com"
             icon={<Mail />}
             autoComplete="email"
-            value={profile.email}
-            onChange={(e) => updateProfile({ email: e.target.value })}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <Field
             label="Password"
@@ -80,9 +131,15 @@ function CreateAccount() {
         </div>
 
         <div className="mt-auto space-y-3 pt-8">
-          <Button type="submit" variant="hero" size="pill" disabled={!valid}>
-            Continue
+          <Button type="submit" variant="hero" size="pill" disabled={!valid || busy}>
+            {busy ? "Creating your account…" : "Continue"}
           </Button>
+          <p className="text-center text-[12px] text-muted-foreground">
+            Already have an account?{" "}
+            <Link to="/sign-in" className="font-bold text-primary">
+              Sign in
+            </Link>
+          </p>
           <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
             By continuing you agree to the TIAN Community Guidelines and Privacy Policy.
           </p>

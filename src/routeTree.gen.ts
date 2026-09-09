@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatusRouteImport } from './routes/status'
+import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ProfileSetupRouteImport } from './routes/profile-setup'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -38,6 +39,11 @@ import { Route as CommunityCommunityIdAboutRouteImport } from './routes/communit
 const StatusRoute = StatusRouteImport.update({
   id: '/status',
   path: '/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
+  '/sign-in': typeof SignInRoute
   '/status': typeof StatusRouteWithChildren
   '/chats/$chatId': typeof ChatsChatIdRoute
   '/chats/new': typeof ChatsNewRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
+  '/sign-in': typeof SignInRoute
   '/chats/$chatId': typeof ChatsChatIdRoute
   '/chats/new': typeof ChatsNewRoute
   '/community/create-post': typeof CommunityCreatePostRoute
@@ -227,6 +235,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/profile-setup': typeof ProfileSetupRoute
   '/settings': typeof SettingsRoute
+  '/sign-in': typeof SignInRoute
   '/status': typeof StatusRouteWithChildren
   '/chats/$chatId': typeof ChatsChatIdRoute
   '/chats/new': typeof ChatsNewRoute
@@ -256,6 +265,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/profile-setup'
     | '/settings'
+    | '/sign-in'
     | '/status'
     | '/chats/$chatId'
     | '/chats/new'
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/profile-setup'
     | '/settings'
+    | '/sign-in'
     | '/chats/$chatId'
     | '/chats/new'
     | '/community/create-post'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/profile-setup'
     | '/settings'
+    | '/sign-in'
     | '/status'
     | '/chats/$chatId'
     | '/chats/new'
@@ -334,6 +346,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ProfileSetupRoute: typeof ProfileSetupRoute
   SettingsRoute: typeof SettingsRoute
+  SignInRoute: typeof SignInRoute
   StatusRoute: typeof StatusRouteWithChildren
   UUsernameRoute: typeof UUsernameRoute
 }
@@ -345,6 +358,13 @@ declare module '@tanstack/react-router' {
       path: '/status'
       fullPath: '/status'
       preLoaderRoute: typeof StatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -590,6 +610,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ProfileSetupRoute: ProfileSetupRoute,
   SettingsRoute: SettingsRoute,
+  SignInRoute: SignInRoute,
   StatusRoute: StatusRouteWithChildren,
   UUsernameRoute: UUsernameRoute,
 }
