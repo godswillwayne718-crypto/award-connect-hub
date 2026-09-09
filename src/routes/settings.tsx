@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Bell,
+  Check,
   ChevronLeft,
   ChevronRight,
   Globe,
@@ -12,10 +13,15 @@ import {
 } from "lucide-react";
 import { MobileShell } from "@/components/tian/mobile-shell";
 import { ProfileCard } from "@/components/tian/profile-card";
+import { useContacts } from "@/lib/contacts-store";
 import { setMessagePrivacy, useMessagePrivacy, type MessagePrivacy } from "@/lib/chat-store";
 import {
   setStatusPrivacy,
   useStatusPrivacy,
+  useStatusExceptIds,
+  useStatusOnlyIds,
+  toggleStatusExcept,
+  toggleStatusOnly,
   PRIVACY_LABEL,
   type StatusPrivacy,
 } from "@/lib/status-store";
@@ -166,16 +172,6 @@ function MessagePrivacyCard() {
           );
         })}
       </ul>
-      {privacy === "except" ? (
-        <ContactPicker mode="except" selected={exceptIds} onToggle={toggleStatusExcept} />
-      ) : null}
-      {privacy === "only" ? (
-        <ContactPicker mode="only" selected={onlyIds} onToggle={toggleStatusOnly} />
-      ) : null}
-      <p className="mt-2 px-1 text-[11px] leading-relaxed text-muted-foreground">
-        Saved on this device only. Status privacy moves to your TIAN account when accounts go
-        online.
-      </p>
     </ProfileCard>
   );
 }
@@ -256,6 +252,8 @@ function ContactPicker({
 /** Status audience control — enforced by the Status feed and viewer. */
 function StatusPrivacyCard() {
   const privacy = useStatusPrivacy();
+  const exceptIds = useStatusExceptIds();
+  const onlyIds = useStatusOnlyIds();
   return (
     <ProfileCard title="Who can view my Status?">
       <ul className="space-y-1" role="radiogroup" aria-label="Who can view my Status?">

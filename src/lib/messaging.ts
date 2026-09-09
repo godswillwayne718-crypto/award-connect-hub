@@ -101,19 +101,19 @@ export function useInbox(me: string | null) {
       const byId = new Map((((profiles ?? []) as Profile[]) || []).map((p) => [p.id, p]));
       const msgs = ((messages ?? []) as DbMessage[]) || [];
 
-      return list
-        .map((conversation) => {
-          const other = byId.get(otherUserId(conversation, me));
-          if (!other) return null;
-          const mine = msgs.filter((m) => m.conversation_id === conversation.id);
-          return {
-            conversation,
-            other,
-            lastMessage: mine[0] ?? null,
-            unread: mine.filter((m) => m.sender_id !== me && !m.read_at).length,
-          } satisfies InboxEntry;
-        })
-        .filter((e): e is InboxEntry => Boolean(e));
+      const entries: InboxEntry[] = [];
+      for (const conversation of list) {
+        const other = byId.get(otherUserId(conversation, me));
+        if (!other) continue;
+        const mine = msgs.filter((m) => m.conversation_id === conversation.id);
+        entries.push({
+          conversation,
+          other,
+          lastMessage: mine[0] ?? null,
+          unread: mine.filter((m) => m.sender_id !== me && !m.read_at).length,
+        });
+      }
+      return entries;
     },
     enabled: Boolean(me),
   });
