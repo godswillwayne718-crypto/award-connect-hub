@@ -166,16 +166,6 @@ function MessagePrivacyCard() {
           );
         })}
       </ul>
-      {privacy === "except" ? (
-        <ContactPicker mode="except" selected={exceptIds} onToggle={toggleStatusExcept} />
-      ) : null}
-      {privacy === "only" ? (
-        <ContactPicker mode="only" selected={onlyIds} onToggle={toggleStatusOnly} />
-      ) : null}
-      <p className="mt-2 px-1 text-[11px] leading-relaxed text-muted-foreground">
-        Saved on this device only. Status privacy moves to your TIAN account when accounts go
-        online.
-      </p>
     </ProfileCard>
   );
 }
