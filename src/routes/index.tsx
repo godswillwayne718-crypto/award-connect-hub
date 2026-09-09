@@ -88,7 +88,7 @@ function Welcome() {
             <Link to="/create-account">Create your account</Link>
           </Button>
           <Button asChild variant="ghostLight" size="pill">
-            <Link to="/home">I already have an account</Link>
+            <Link to="/sign-in">I already have an account</Link>
           </Button>
           <p className="pt-1 text-center text-[11px] leading-relaxed text-primary-foreground/45">
             TIAN is an independent community platform and is not operated by the Duke of Edinburgh's
