@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Home, Users, CircleDashed, MessageCircle, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useUnreadTotal } from "@/lib/chat-store";
+import { useUnreadTotal } from "@/lib/messaging";
+import { useAuth } from "@/lib/auth";
 
 const items = [
   { to: "/home", label: "Home", icon: Home },
@@ -12,7 +13,8 @@ const items = [
 ] as const;
 
 export function BottomNav() {
-  const unread = useUnreadTotal();
+  const { userId } = useAuth();
+  const unread = useUnreadTotal(userId);
   return (
     <nav className="sticky bottom-0 z-30 mt-auto border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur shadow-nav">
       <ul className="grid grid-cols-5">

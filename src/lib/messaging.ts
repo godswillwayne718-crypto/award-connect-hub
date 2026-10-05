@@ -122,7 +122,7 @@ export function useInbox(me: string | null) {
   useEffect(() => {
     if (!me) return;
     const channel = supabase
-      .channel(`inbox-${me}`)
+      .channel(`inbox-${me}-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, () => {
         void qc.invalidateQueries({ queryKey: ["inbox", me] });
       })
@@ -187,7 +187,7 @@ export function useMessages(conversationId: string, me: string | null) {
   useEffect(() => {
     if (!conversationId) return;
     const channel = supabase
-      .channel(`messages-${conversationId}`)
+      .channel(`messages-${conversationId}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         {
