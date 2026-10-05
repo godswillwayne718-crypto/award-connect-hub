@@ -1,3 +1,6 @@
+import { useAuth } from "@/lib/auth";
+import { updateMyProfile } from "@/lib/directory";
+import { toast } from "sonner";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -38,6 +41,7 @@ const roleIcons: Record<TianRole, typeof Award> = {
 
 function AccountSetup() {
   const profile = useProfile();
+  const { userId } = useAuth();
   const navigate = useNavigate();
   const valid = Boolean(profile.role && profile.level && profile.country.trim());
 
@@ -117,7 +121,17 @@ function AccountSetup() {
             variant="hero"
             size="pill"
             disabled={!valid}
-            onClick={() => navigate({ to: "/profile-setup" })}
+            onClick={() => {
+              if (userId) {
+                void updateMyProfile(userId, {
+                  role: profile.role ?? null,
+                  level: profile.level ?? null,
+                  country: profile.country.trim(),
+                  centre: profile.centre.trim(),
+                }).catch(() => toast.error("We couldn't save your details. Please try again."));
+              }
+              void navigate({ to: "/profile-setup" });
+            }}
           >
             Continue
           </Button>
