@@ -3,10 +3,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Contact, MessagesSquare, PenSquare, SearchX } from "lucide-react";
 import { AppScreen } from "@/components/tian/app-screen";
 import { SearchField } from "@/components/community/search-field";
-import { ChatList } from "@/components/chat/chat-list";
+import { InboxRow } from "@/components/chat/inbox-row";
 import { ChatEmptyState } from "@/components/chat/chat-empty-state";
+import { RequireAuth } from "@/components/tian/require-auth";
 import { Button } from "@/components/ui/button";
-import { participantOf, lastMessage, sortChats, useChats, useUnreadTotal } from "@/lib/chat-store";
+import { useAuth } from "@/lib/auth";
+import { useInbox } from "@/lib/messaging";
 
 export const Route = createFileRoute("/chats/")({
   head: () => ({
@@ -23,29 +25,31 @@ export const Route = createFileRoute("/chats/")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: ChatsInbox,
+  component: () => (
+    <RequireAuth>
+      <ChatsInbox />
+    </RequireAuth>
+  ),
 });
 
 function ChatsInbox() {
+  const { userId } = useAuth();
+  const me = userId!;
   const [query, setQuery] = useState("");
-  const chats = useChats();
-  const unread = useUnreadTotal();
+  const inbox = useInbox(me);
+  const entries = inbox.data ?? [];
+  const unread = entries.reduce((n, e) => n + e.unread, 0);
 
   const visible = useMemo(() => {
-    const sorted = sortChats(chats);
     const q = query.trim().toLowerCase().replace(/^@/, "");
-    if (!q) return sorted;
-    return sorted.filter((chat) => {
-      const p = participantOf(chat);
-      const last = lastMessage(chat);
-      return (
-        !!p &&
-        (p.name.toLowerCase().includes(q) ||
-          p.username.toLowerCase().includes(q) ||
-          (last?.body.toLowerCase().includes(q) ?? false))
-      );
-    });
-  }, [chats, query]);
+    if (!q) return entries;
+    return entries.filter(
+      (e) =>
+        e.other.full_name.toLowerCase().includes(q) ||
+        e.other.username.toLowerCase().includes(q) ||
+        (e.lastMessage?.body.toLowerCase().includes(q) ?? false),
+    );
+  }, [entries, query]);
 
   return (
     <AppScreen>
@@ -59,26 +63,14 @@ function ChatsInbox() {
               {unread} new
             </span>
           ) : null}
-          <Button
-            asChild
-            size="sm"
-            variant="ghost"
-            className="ml-auto size-11 shrink-0 rounded-full p-0 text-xs min-[430px]:h-11 min-[430px]:w-auto min-[430px]:px-3"
-          >
+          <Button asChild size="sm" variant="ghost" className="ml-auto size-11 shrink-0 rounded-full p-0">
             <Link to="/contacts" aria-label="My contacts">
               <Contact className="size-4" />
-              <span className="hidden min-[430px]:inline">Contacts</span>
             </Link>
           </Button>
-          <Button
-            asChild
-            size="sm"
-            variant="soft"
-            className="size-11 shrink-0 rounded-full p-0 text-xs min-[430px]:h-11 min-[430px]:w-auto min-[430px]:px-4"
-          >
+          <Button asChild size="sm" variant="soft" className="size-11 shrink-0 rounded-full p-0">
             <Link to="/chats/new" aria-label="New chat">
               <PenSquare className="size-4" />
-              <span className="hidden min-[430px]:inline">New Chat</span>
             </Link>
           </Button>
         </div>
@@ -93,15 +85,23 @@ function ChatsInbox() {
       </header>
 
       <div className="px-2 py-3">
-        {visible.length > 0 ? (
-          <ChatList chats={visible} />
+        {inbox.isLoading ? (
+          <p className="py-8 text-center text-sm text-muted-foreground">Loading chats…</p>
+        ) : inbox.isError ? (
+          <p className="py-8 text-center text-sm text-destructive">Couldn't load chats. Check your connection.</p>
+        ) : visible.length > 0 ? (
+          <ul className="space-y-1">
+            {visible.map((e, i) => (
+              <InboxRow key={e.conversation.id} entry={e} me={me} index={i} />
+            ))}
+          </ul>
         ) : (
           <div className="px-3 pt-6">
-            {chats.length === 0 ? (
+            {entries.length === 0 ? (
               <ChatEmptyState
                 icon={MessagesSquare}
                 title="No conversations yet"
-                copy="Start a conversation with another Award member."
+                copy="Search a member by @username to start chatting."
                 action={
                   <Button asChild size="pillAuto" variant="default">
                     <Link to="/chats/new">Start Chat</Link>
@@ -109,11 +109,7 @@ function ChatsInbox() {
                 }
               />
             ) : (
-              <ChatEmptyState
-                icon={SearchX}
-                title="No chats match"
-                copy="Try another name, @username or keyword from a message."
-              />
+              <ChatEmptyState icon={SearchX} title="No chats match" copy="Try another name or @username." />
             )}
           </div>
         )}
