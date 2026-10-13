@@ -9,86 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AccountSetupRouteImport } from './routes/account-setup'
-import { Route as ChatsRouteImport } from './routes/chats'
-import { Route as CommunityRouteImport } from './routes/community'
-import { Route as ContactsRouteImport } from './routes/contacts'
-import { Route as CreateAccountRouteImport } from './routes/create-account'
-import { Route as HomeRouteImport } from './routes/home'
-import { Route as OpportunitiesRouteImport } from './routes/opportunities'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as ProfileSetupRouteImport } from './routes/profile-setup'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as StatusRouteImport } from './routes/status'
-import { Route as ChatsIndexRouteImport } from './routes/chats.index'
-import { Route as ChatsChatIdRouteImport } from './routes/chats.$chatId'
-import { Route as ChatsNewRouteImport } from './routes/chats.new'
-import { Route as CommunityIndexRouteImport } from './routes/community.index'
-import { Route as CommunityCommunityIdRouteImport } from './routes/community.$communityId'
-import { Route as CommunityCreatePostRouteImport } from './routes/community.create-post'
+import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ProfileSetupRouteImport } from './routes/profile-setup'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as OpportunitiesRouteImport } from './routes/opportunities'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as CreateAccountRouteImport } from './routes/create-account'
+import { Route as ContactsRouteImport } from './routes/contacts'
+import { Route as CommunityRouteImport } from './routes/community'
+import { Route as ChatsRouteImport } from './routes/chats'
+import { Route as AccountSetupRouteImport } from './routes/account-setup'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as StatusIndexRouteImport } from './routes/status.index'
-import { Route as StatusStatusIdRouteImport } from './routes/status.$statusId'
-import { Route as StatusNewRouteImport } from './routes/status.new'
+import { Route as CommunityIndexRouteImport } from './routes/community.index'
+import { Route as ChatsIndexRouteImport } from './routes/chats.index'
 import { Route as UUsernameRouteImport } from './routes/u.$username'
+import { Route as StatusNewRouteImport } from './routes/status.new'
+import { Route as StatusStatusIdRouteImport } from './routes/status.$statusId'
+import { Route as CommunityCreatePostRouteImport } from './routes/community.create-post'
+import { Route as CommunityCommunityIdRouteImport } from './routes/community.$communityId'
+import { Route as ChatsNewRouteImport } from './routes/chats.new'
+import { Route as ChatsChatIdRouteImport } from './routes/chats.$chatId'
 import { Route as CommunityCommunityIdIndexRouteImport } from './routes/community.$communityId.index'
-import { Route as CommunityCommunityIdAboutRouteImport } from './routes/community.$communityId.about'
 import { Route as CommunityCommunityIdMembersRouteImport } from './routes/community.$communityId.members'
+import { Route as CommunityCommunityIdAboutRouteImport } from './routes/community.$communityId.about'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AccountSetupRoute = AccountSetupRouteImport.update({
-  id: '/account-setup',
-  path: '/account-setup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChatsRoute = ChatsRouteImport.update({
-  id: '/chats',
-  path: '/chats',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommunityRoute = CommunityRouteImport.update({
-  id: '/community',
-  path: '/community',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactsRoute = ContactsRouteImport.update({
-  id: '/contacts',
-  path: '/contacts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreateAccountRoute = CreateAccountRouteImport.update({
-  id: '/create-account',
-  path: '/create-account',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HomeRoute = HomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OpportunitiesRoute = OpportunitiesRouteImport.update({
-  id: '/opportunities',
-  path: '/opportunities',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileSetupRoute = ProfileSetupRouteImport.update({
-  id: '/profile-setup',
-  path: '/profile-setup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
+const StatusRoute = StatusRouteImport.update({
+  id: '/status',
+  path: '/status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignInRoute = SignInRouteImport.update({
@@ -96,44 +46,84 @@ const SignInRoute = SignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StatusRoute = StatusRouteImport.update({
-  id: '/status',
-  path: '/status',
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ChatsIndexRoute = ChatsIndexRouteImport.update({
+const ProfileSetupRoute = ProfileSetupRouteImport.update({
+  id: '/profile-setup',
+  path: '/profile-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpportunitiesRoute = OpportunitiesRouteImport.update({
+  id: '/opportunities',
+  path: '/opportunities',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateAccountRoute = CreateAccountRouteImport.update({
+  id: '/create-account',
+  path: '/create-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactsRoute = ContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatsRoute = ChatsRouteImport.update({
+  id: '/chats',
+  path: '/chats',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountSetupRoute = AccountSetupRouteImport.update({
+  id: '/account-setup',
+  path: '/account-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => ChatsRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-const ChatsChatIdRoute = ChatsChatIdRouteImport.update({
-  id: '/$chatId',
-  path: '/$chatId',
-  getParentRoute: () => ChatsRoute,
-} as any)
-const ChatsNewRoute = ChatsNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => ChatsRoute,
+const StatusIndexRoute = StatusIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StatusRoute,
 } as any)
 const CommunityIndexRoute = CommunityIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => CommunityRoute,
 } as any)
-const CommunityCommunityIdRoute = CommunityCommunityIdRouteImport.update({
-  id: '/$communityId',
-  path: '/$communityId',
-  getParentRoute: () => CommunityRoute,
-} as any)
-const CommunityCreatePostRoute = CommunityCreatePostRouteImport.update({
-  id: '/create-post',
-  path: '/create-post',
-  getParentRoute: () => CommunityRoute,
-} as any)
-const StatusIndexRoute = StatusIndexRouteImport.update({
+const ChatsIndexRoute = ChatsIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => ChatsRoute,
+} as any)
+const UUsernameRoute = UUsernameRouteImport.update({
+  id: '/u/$username',
+  path: '/u/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatusNewRoute = StatusNewRouteImport.update({
+  id: '/new',
+  path: '/new',
   getParentRoute: () => StatusRoute,
 } as any)
 const StatusStatusIdRoute = StatusStatusIdRouteImport.update({
@@ -141,15 +131,25 @@ const StatusStatusIdRoute = StatusStatusIdRouteImport.update({
   path: '/$statusId',
   getParentRoute: () => StatusRoute,
 } as any)
-const StatusNewRoute = StatusNewRouteImport.update({
+const CommunityCreatePostRoute = CommunityCreatePostRouteImport.update({
+  id: '/create-post',
+  path: '/create-post',
+  getParentRoute: () => CommunityRoute,
+} as any)
+const CommunityCommunityIdRoute = CommunityCommunityIdRouteImport.update({
+  id: '/$communityId',
+  path: '/$communityId',
+  getParentRoute: () => CommunityRoute,
+} as any)
+const ChatsNewRoute = ChatsNewRouteImport.update({
   id: '/new',
   path: '/new',
-  getParentRoute: () => StatusRoute,
+  getParentRoute: () => ChatsRoute,
 } as any)
-const UUsernameRoute = UUsernameRouteImport.update({
-  id: '/u/$username',
-  path: '/u/$username',
-  getParentRoute: () => rootRouteImport,
+const ChatsChatIdRoute = ChatsChatIdRouteImport.update({
+  id: '/$chatId',
+  path: '/$chatId',
+  getParentRoute: () => ChatsRoute,
 } as any)
 const CommunityCommunityIdIndexRoute =
   CommunityCommunityIdIndexRouteImport.update({
@@ -157,16 +157,16 @@ const CommunityCommunityIdIndexRoute =
     path: '/',
     getParentRoute: () => CommunityCommunityIdRoute,
   } as any)
-const CommunityCommunityIdAboutRoute =
-  CommunityCommunityIdAboutRouteImport.update({
-    id: '/about',
-    path: '/about',
-    getParentRoute: () => CommunityCommunityIdRoute,
-  } as any)
 const CommunityCommunityIdMembersRoute =
   CommunityCommunityIdMembersRouteImport.update({
     id: '/members',
     path: '/members',
+    getParentRoute: () => CommunityCommunityIdRoute,
+  } as any)
+const CommunityCommunityIdAboutRoute =
+  CommunityCommunityIdAboutRouteImport.update({
+    id: '/about',
+    path: '/about',
     getParentRoute: () => CommunityCommunityIdRoute,
   } as any)
 
@@ -353,81 +353,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/account-setup': {
-      id: '/account-setup'
-      path: '/account-setup'
-      fullPath: '/account-setup'
-      preLoaderRoute: typeof AccountSetupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/chats': {
-      id: '/chats'
-      path: '/chats'
-      fullPath: '/chats'
-      preLoaderRoute: typeof ChatsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/community': {
-      id: '/community'
-      path: '/community'
-      fullPath: '/community'
-      preLoaderRoute: typeof CommunityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contacts': {
-      id: '/contacts'
-      path: '/contacts'
-      fullPath: '/contacts'
-      preLoaderRoute: typeof ContactsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/create-account': {
-      id: '/create-account'
-      path: '/create-account'
-      fullPath: '/create-account'
-      preLoaderRoute: typeof CreateAccountRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/opportunities': {
-      id: '/opportunities'
-      path: '/opportunities'
-      fullPath: '/opportunities'
-      preLoaderRoute: typeof OpportunitiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile-setup': {
-      id: '/profile-setup'
-      path: '/profile-setup'
-      fullPath: '/profile-setup'
-      preLoaderRoute: typeof ProfileSetupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
+    '/status': {
+      id: '/status'
+      path: '/status'
+      fullPath: '/status'
+      preLoaderRoute: typeof StatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sign-in': {
@@ -437,33 +367,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/status': {
-      id: '/status'
-      path: '/status'
-      fullPath: '/status'
-      preLoaderRoute: typeof StatusRouteImport
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/chats/': {
-      id: '/chats/'
+    '/profile-setup': {
+      id: '/profile-setup'
+      path: '/profile-setup'
+      fullPath: '/profile-setup'
+      preLoaderRoute: typeof ProfileSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/opportunities': {
+      id: '/opportunities'
+      path: '/opportunities'
+      fullPath: '/opportunities'
+      preLoaderRoute: typeof OpportunitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-account': {
+      id: '/create-account'
+      path: '/create-account'
+      fullPath: '/create-account'
+      preLoaderRoute: typeof CreateAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contacts': {
+      id: '/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof ContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chats': {
+      id: '/chats'
+      path: '/chats'
+      fullPath: '/chats'
+      preLoaderRoute: typeof ChatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account-setup': {
+      id: '/account-setup'
+      path: '/account-setup'
+      fullPath: '/account-setup'
+      preLoaderRoute: typeof AccountSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
       path: '/'
-      fullPath: '/chats/'
-      preLoaderRoute: typeof ChatsIndexRouteImport
-      parentRoute: typeof ChatsRoute
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/chats/$chatId': {
-      id: '/chats/$chatId'
-      path: '/$chatId'
-      fullPath: '/chats/$chatId'
-      preLoaderRoute: typeof ChatsChatIdRouteImport
-      parentRoute: typeof ChatsRoute
-    }
-    '/chats/new': {
-      id: '/chats/new'
-      path: '/new'
-      fullPath: '/chats/new'
-      preLoaderRoute: typeof ChatsNewRouteImport
-      parentRoute: typeof ChatsRoute
+    '/status/': {
+      id: '/status/'
+      path: '/'
+      fullPath: '/status/'
+      preLoaderRoute: typeof StatusIndexRouteImport
+      parentRoute: typeof StatusRoute
     }
     '/community/': {
       id: '/community/'
@@ -472,25 +458,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityIndexRouteImport
       parentRoute: typeof CommunityRoute
     }
-    '/community/$communityId': {
-      id: '/community/$communityId'
-      path: '/$communityId'
-      fullPath: '/community/$communityId'
-      preLoaderRoute: typeof CommunityCommunityIdRouteImport
-      parentRoute: typeof CommunityRoute
-    }
-    '/community/create-post': {
-      id: '/community/create-post'
-      path: '/create-post'
-      fullPath: '/community/create-post'
-      preLoaderRoute: typeof CommunityCreatePostRouteImport
-      parentRoute: typeof CommunityRoute
-    }
-    '/status/': {
-      id: '/status/'
+    '/chats/': {
+      id: '/chats/'
       path: '/'
-      fullPath: '/status/'
-      preLoaderRoute: typeof StatusIndexRouteImport
+      fullPath: '/chats/'
+      preLoaderRoute: typeof ChatsIndexRouteImport
+      parentRoute: typeof ChatsRoute
+    }
+    '/u/$username': {
+      id: '/u/$username'
+      path: '/u/$username'
+      fullPath: '/u/$username'
+      preLoaderRoute: typeof UUsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/status/new': {
+      id: '/status/new'
+      path: '/new'
+      fullPath: '/status/new'
+      preLoaderRoute: typeof StatusNewRouteImport
       parentRoute: typeof StatusRoute
     }
     '/status/$statusId': {
@@ -500,19 +486,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatusStatusIdRouteImport
       parentRoute: typeof StatusRoute
     }
-    '/status/new': {
-      id: '/status/new'
-      path: '/new'
-      fullPath: '/status/new'
-      preLoaderRoute: typeof StatusNewRouteImport
-      parentRoute: typeof StatusRoute
+    '/community/create-post': {
+      id: '/community/create-post'
+      path: '/create-post'
+      fullPath: '/community/create-post'
+      preLoaderRoute: typeof CommunityCreatePostRouteImport
+      parentRoute: typeof CommunityRoute
     }
-    '/u/$username': {
-      id: '/u/$username'
-      path: '/u/$username'
-      fullPath: '/u/$username'
-      preLoaderRoute: typeof UUsernameRouteImport
-      parentRoute: typeof rootRouteImport
+    '/community/$communityId': {
+      id: '/community/$communityId'
+      path: '/$communityId'
+      fullPath: '/community/$communityId'
+      preLoaderRoute: typeof CommunityCommunityIdRouteImport
+      parentRoute: typeof CommunityRoute
+    }
+    '/chats/new': {
+      id: '/chats/new'
+      path: '/new'
+      fullPath: '/chats/new'
+      preLoaderRoute: typeof ChatsNewRouteImport
+      parentRoute: typeof ChatsRoute
+    }
+    '/chats/$chatId': {
+      id: '/chats/$chatId'
+      path: '/$chatId'
+      fullPath: '/chats/$chatId'
+      preLoaderRoute: typeof ChatsChatIdRouteImport
+      parentRoute: typeof ChatsRoute
     }
     '/community/$communityId/': {
       id: '/community/$communityId/'
@@ -521,18 +521,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityCommunityIdIndexRouteImport
       parentRoute: typeof CommunityCommunityIdRoute
     }
-    '/community/$communityId/about': {
-      id: '/community/$communityId/about'
-      path: '/about'
-      fullPath: '/community/$communityId/about'
-      preLoaderRoute: typeof CommunityCommunityIdAboutRouteImport
-      parentRoute: typeof CommunityCommunityIdRoute
-    }
     '/community/$communityId/members': {
       id: '/community/$communityId/members'
       path: '/members'
       fullPath: '/community/$communityId/members'
       preLoaderRoute: typeof CommunityCommunityIdMembersRouteImport
+      parentRoute: typeof CommunityCommunityIdRoute
+    }
+    '/community/$communityId/about': {
+      id: '/community/$communityId/about'
+      path: '/about'
+      fullPath: '/community/$communityId/about'
+      preLoaderRoute: typeof CommunityCommunityIdAboutRouteImport
       parentRoute: typeof CommunityCommunityIdRoute
     }
   }
