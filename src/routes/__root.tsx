@@ -115,7 +115,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: (props: ErrorComponentProps) => (
-    <ErrorComponent error={props.error} reset={props.reset ?? (() => window.location.reload())} />
+    <ErrorComponent
+      error={props.error instanceof Error ? props.error : new Error(String(props.error))}
+      reset={props.reset ?? (() => window.location.reload())}
+    />
   ),
 });
 
