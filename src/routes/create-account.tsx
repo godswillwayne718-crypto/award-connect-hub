@@ -57,6 +57,12 @@ function CreateAccount() {
       toast.error(error.message || "We couldn't create your account. Please try again.");
       return;
     }
+    // An email that already has an account returns a user with no identities and no email is sent.
+    if (data.user && (data.user.identities?.length ?? 0) === 0) {
+      toast.error("This email already has a TIAN account. Sign in instead.");
+      void navigate({ to: "/sign-in" });
+      return;
+    }
     if (!data.session) {
       setCheckEmail(true);
       return;
