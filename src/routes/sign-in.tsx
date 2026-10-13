@@ -8,6 +8,7 @@ import { Field } from "@/components/tian/fields";
 import { StepHeader } from "@/components/tian/step-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { OtpForm } from "@/components/tian/otp-form";
 
 export const Route = createFileRoute("/sign-in")({
   head: () => ({
@@ -29,10 +30,37 @@ function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
 
   useEffect(() => {
     if (!loading && userId) void navigate({ to: "/home", replace: true });
   }, [loading, userId, navigate]);
+
+  async function sendCode() {
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: { shouldCreateUser: false },
+    });
+    if (error) throw error;
+  }
+
+  async function requestCode() {
+    if (!email.includes("@")) {
+      toast.error("Enter your email address first.");
+      return;
+    }
+    setBusy(true);
+    try {
+      await sendCode();
+      setCodeSent(true);
+    } catch (err) {
+      toast.error(
+        (err as Error).message || "Couldn't send a code. Check the email or create an account.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,6 +73,30 @@ function SignIn() {
     }
     toast.success("Welcome back to TIAN");
     void navigate({ to: "/home", replace: true });
+  }
+
+  if (codeSent) {
+    return (
+      <MobileShell tone="white">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
+          <h1 className="font-display text-xl font-extrabold tracking-tight text-foreground">
+            Enter your sign-in code
+          </h1>
+          <p className="text-[13px] leading-relaxed text-muted-foreground">
+            We sent a code to {email}. If the email only has a link, tap it to sign in.
+          </p>
+          <OtpForm
+            email={email.trim()}
+            type="email"
+            onVerified={() => void navigate({ to: "/home", replace: true })}
+            onResend={sendCode}
+          />
+          <Button variant="ghost" size="pill" className="max-w-xs" onClick={() => setCodeSent(false)}>
+            Use password instead
+          </Button>
+        </div>
+      </MobileShell>
+    );
   }
 
   return (
@@ -94,6 +146,9 @@ function SignIn() {
             disabled={busy || !email.includes("@") || password.length < 6}
           >
             {busy ? "Signing in…" : "Sign in"}
+          </Button>
+          <Button type="button" variant="ghost" size="pill" disabled={busy} onClick={requestCode}>
+            Email me a sign-in code instead
           </Button>
           <p className="text-center text-[12px] text-muted-foreground">
             New to TIAN?{" "}

@@ -8,6 +8,7 @@ import { Field } from "@/components/tian/fields";
 import { StepHeader } from "@/components/tian/step-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { OtpForm } from "@/components/tian/otp-form";
 
 export const Route = createFileRoute("/create-account")({
   head: () => ({
@@ -67,16 +68,26 @@ function CreateAccount() {
   if (checkEmail) {
     return (
       <MobileShell tone="white">
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
           <h1 className="font-display text-xl font-extrabold tracking-tight text-foreground">
-            Confirm your email
+            Enter your email code
           </h1>
           <p className="text-[13px] leading-relaxed text-muted-foreground">
-            We sent a confirmation link to {email}. Open it, then come back and sign in.
+            We sent a code to {email}. Type it below to finish creating your account.
           </p>
-          <Button asChild variant="hero" size="pill" className="mt-2 max-w-xs">
-            <Link to="/sign-in">Go to sign in</Link>
-          </Button>
+          <OtpForm
+            email={email.trim()}
+            type="signup"
+            onVerified={() => void navigate({ to: "/account-setup", replace: true })}
+            onResend={async () => {
+              const { error } = await supabase.auth.resend({ type: "signup", email: email.trim() });
+              if (error) throw error;
+            }}
+          />
+          <p className="max-w-xs rounded-xl bg-muted p-3 text-[11px] leading-relaxed text-muted-foreground">
+            If the email only shows a "Confirm" link and no code, tap the link — it confirms your
+            account too, then sign in.
+          </p>
         </div>
       </MobileShell>
     );
