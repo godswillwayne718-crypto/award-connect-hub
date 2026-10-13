@@ -36,8 +36,8 @@ export const Route = createFileRoute("/community/$communityId")({
     };
   },
   component: CommunityDetail,
-  errorComponent: CommunityMissing,
-  notFoundComponent: CommunityMissing,
+  errorComponent: () => <CommunityMissing />,
+  notFoundComponent: () => <CommunityMissing />,
 });
 
 function CommunityMissing() {
