@@ -147,6 +147,9 @@ function SignIn() {
           >
             {busy ? "Signing in…" : "Sign in"}
           </Button>
+          <Button type="button" variant="ghost" size="pill" disabled={busy} onClick={requestCode}>
+            Email me a sign-in code instead
+          </Button>
           <p className="text-center text-[12px] text-muted-foreground">
             New to TIAN?{" "}
             <Link to="/create-account" className="font-bold text-primary">
